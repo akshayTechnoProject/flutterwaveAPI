@@ -6,7 +6,7 @@ export default function transaction() {
     method: 'GET',
     redirect: 'follow',
     headers: {
-      Authorization: 'Bearer FLWSECK_TEST-f76c049ba3f5791f1f47f734ece7d305-X',
+      Authorization: `Bearer ${process.env.REACT_APP_API_PUBLIC_KEY}`,
       'Access-Control-Allow-Origin': 'http://localhost:3000',
       'Access-Control-Allow-Methods': 'GET',
     },
