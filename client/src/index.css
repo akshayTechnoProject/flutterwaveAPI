@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.formDiv {
+  text-align: left;
+}
+.formDiv form label {
+  font-size: 15px;
+}

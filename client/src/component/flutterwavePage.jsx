@@ -4,10 +4,10 @@ import axios from 'axios';
 export default function FApp() {
   console.log('b', window.env?.API_PUBLIC_KEY);
   const config = {
-    public_key: 'FLWPUBK_TEST-d77c0ba4c8c6b947731cb2dfd955afb3-X',
+    public_key: 'FLWPUBK_TEST-d49c3523fcc5e74b751c102027d18ba4-X',
     tx_ref: Date.now(),
-    amount: 150,
-    currency: 'GHS',
+    amount: 100,
+    currency: 'NGN',
     //payment_options: 'card,mobilemoney,ussd',
     customer: {
       email: 'user@gmail.com',
@@ -23,7 +23,7 @@ export default function FApp() {
   useEffect(() => {
     let URL = 'https://api.flutterwave.com/v3/transactions';
     const AuthString = 'Bearer '.concat(
-      'FLWPUBK_TEST-b4b9e29ad77d0e0f23a26500a6bb9ba3-X'
+      'FLWPUBK_TEST-d49c3523fcc5e74b751c102027d18ba4-X'
     );
     axios
       .get(URL, { headers: { Authorization: AuthString } })
@@ -38,28 +38,22 @@ export default function FApp() {
   const handleFlutterPayment = useFlutterwave(config);
 
   return (
-    <div className="App">
-      <h1>Hello Test user</h1>
+    <div className="App m-5">
+      {/* <h1>Hello Test user</h1> */}
 
-      <button
+      {/* <button
         onClick={() => {
           handleFlutterPayment({
             callback: (response) => {
               console.log(response);
               closePaymentModal(); // this will close the modal programmatically
-              if (response?.status == 'successful') {
-                window.alert(
-                  `Your transaction id is: ${response?.transaction_id}`
-                );
-              }
             },
             onClose: () => {},
           });
         }}
       >
         Payment with React hooks
-      </button>
-      <button>btn</button>
+      </button> */}
     </div>
   );
 }
