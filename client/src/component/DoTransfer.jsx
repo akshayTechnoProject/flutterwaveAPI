@@ -60,7 +60,7 @@ export default function DoTransfer() {
       <h2 className="mb-2">Transfer a money with flutterwave</h2>
       <div className="transferForm w-25 p-2 formDiv">
         <form>
-          <div className="form-group mb-3">
+          <div className="form-group mb-2">
             <label for="exampleInputEmail1" className="ml-0">
               Email Address
             </label>
@@ -74,7 +74,7 @@ export default function DoTransfer() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="form-group mb-3">
+          <div className="form-group mb-2">
             <label for="exampleInputPassword1">User Name</label>
             <input
               type="text"
@@ -85,7 +85,7 @@ export default function DoTransfer() {
               onChange={(e) => setUserName(e.target.value)}
             />
           </div>
-          <div className="form-group mb-3">
+          <div className="form-group mb-2">
             <label for="exampleInputPassword1">Phone Number</label>
             <input
               type="number"
@@ -96,7 +96,7 @@ export default function DoTransfer() {
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </div>
-          <div className="form-group mb-3">
+          <div className="form-group mb-2">
             <label for="exampleInputPassword1">Amount</label>
             <input
               type="number"
