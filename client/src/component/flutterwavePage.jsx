@@ -54,7 +54,9 @@ export default function FApp() {
       >
         Payment with React hooks
       </button>
-      <button>btn</button>
+      <button>
+        <a href="https://ravesandbox.flutterwave.com/pay/1zrm46vp06az">btn</a>
+      </button>
     </div>
   );
 }
