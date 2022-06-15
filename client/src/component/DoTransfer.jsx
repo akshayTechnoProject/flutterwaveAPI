@@ -91,7 +91,7 @@ export default function DoTransfer() {
               id="exampleInputPassword1"
               placeholder="Enter amount"
               required
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              onChange={(e) => setAmount(e.target.value)}
             />
           </div>
           <button

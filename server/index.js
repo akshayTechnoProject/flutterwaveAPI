@@ -1,28 +1,44 @@
-const express = require("express");
+const express = require('express');
 // const bodyParser = require("body-parser"); /* deprecated */
-const cors = require("cors");
-const bodyParser = require("body-parser");
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 // const dotenv = require("dotenv");
 // dotenv.config();
-const Flutterwave = require("flutterwave-node-v3");
+const Flutterwave = require('flutterwave-node-v3');
 var data;
 async function getData() {
   const flw = new Flutterwave(
-    "FLWPUBK_TEST-e0e565ef7d07a71de3ce1478ac88a3ea-X",
-    "FLWSECK_TEST-04b54174dc008a082522de1e0b05f888-X"
+    'FLWPUBK_TEST-e0e565ef7d07a71de3ce1478ac88a3ea-X',
+    'FLWSECK_TEST-04b54174dc008a082522de1e0b05f888-X'
   );
 
   const payload = {
-    from: "2020-01-01",
-    to: "2020-05-05",
+    from: '2020-01-01',
+    to: '2020-05-05',
   };
 
   const response = await flw.Transaction.fetch(payload);
-  console.log(response);
+  //console.log(response);
   data = response;
 }
 getData();
+
+async function getData1() {
+  var request = require('request');
+  var options = {
+    method: 'GET',
+    url: 'https://api.flutterwave.com/v3/transfers/rates?amount=1000&destination_currency=USD&source_currency=NGN',
+    headers: {
+      Authorization: 'Bearer FLWSECK_TEST-04b54174dc008a082522de1e0b05f888-X',
+    },
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    console.log(response.body);
+  });
+}
+getData1();
 const app = express();
 
 var corsOptions = {
@@ -34,7 +50,7 @@ app.use(cors(corsOptions));
 // parse requests of content-type - application/json
 app.use(express.json()); /* bodyParser.json() is deprecated */
 
-app.use(express.static("public"));
+app.use(express.static('public'));
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(
@@ -58,11 +74,11 @@ app.use(bodyParser.json());
 //   });
 
 // simple route
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   res.json(data);
 });
 
-require("./routes/admin.routes")(app);
+require('./routes/admin.routes')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3001;

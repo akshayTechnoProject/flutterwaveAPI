@@ -7,7 +7,7 @@ export default function FApp() {
     public_key: 'FLWPUBK_TEST-d77c0ba4c8c6b947731cb2dfd955afb3-X',
     tx_ref: Date.now(),
     amount: 150,
-    currency: 'NGN',
+    currency: 'GHS',
     //payment_options: 'card,mobilemoney,ussd',
     customer: {
       email: 'user@gmail.com',
