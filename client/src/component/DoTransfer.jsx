@@ -7,6 +7,7 @@ export default function DoTransfer() {
   const [userName, setUserName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [amount, setAmount] = useState('');
+  const [error, setError] = useState({});
   const [convertMoney, setConvertMoney] = useState();
   const [rate, setRate] = useState();
   const [disable, setDisable] = useState(false);
@@ -31,19 +32,25 @@ export default function DoTransfer() {
   };
 
   function validate() {
+    let error = {};
     let isValide = true;
     if (email == '') {
       isValide = false;
+      error['email'] = 'please enter a email';
     }
     if (userName == '') {
+      error['userName'] = 'please enter a user name';
       isValide = false;
     }
     if (phoneNumber == '') {
+      error['phoneNumber'] = 'please enter a phone number';
       isValide = false;
     }
     if (amount <= 0) {
+      error['amount'] = 'please enter valid amount';
       isValide = false;
     }
+    setError(error);
     return isValide;
   }
   const handleFlutterPayment = useFlutterwave(config);
@@ -121,6 +128,9 @@ export default function DoTransfer() {
               required
               onChange={(e) => setEmail(e.target.value)}
             />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.email}
+            </div>
           </div>
           <div className="form-group mb-2">
             <label for="exampleInputPassword1">User Name</label>
@@ -133,6 +143,9 @@ export default function DoTransfer() {
               required
               onChange={(e) => setUserName(e.target.value)}
             />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.userName}
+            </div>
           </div>
           <div className="form-group mb-2">
             <label for="exampleInputPassword1">Phone Number</label>
@@ -145,6 +158,9 @@ export default function DoTransfer() {
               required
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.phoneNumber}
+            </div>
           </div>
           <div class="form-group ">
             <label for="inputState">Source Currency</label>
@@ -203,6 +219,7 @@ export default function DoTransfer() {
                 className="form-control"
                 id="exampleInputPassword1"
                 placeholder="Enter amount"
+                value={amount}
                 required
                 onChange={(event) => {
                   event.preventDefault();
@@ -213,6 +230,9 @@ export default function DoTransfer() {
                   );
                 }}
               />
+            </div>
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.amount}
             </div>
           </div>
 
