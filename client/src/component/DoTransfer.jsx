@@ -132,14 +132,13 @@ export default function DoTransfer() {
           </button>
         </form>
         <br />
-        <button className="btn btn-success w-100">
-          <a
-            href="https://ravesandbox.flutterwave.com/pay/1zrm46vp06az"
-            className="text-decoration-none text-white"
-          >
-            Reva Payment
-          </a>
-        </button>
+
+        <a
+          href="https://ravesandbox.flutterwave.com/pay/1zrm46vp06az"
+          className="text-decoration-none text-white"
+        >
+          <button className="btn btn-success w-100">Reva Payment</button>
+        </a>
       </div>
     </>
   );
