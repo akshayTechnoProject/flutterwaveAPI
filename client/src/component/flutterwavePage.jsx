@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import axios from 'axios';
 export default function FApp() {
-  console.log('b', window.env?.API_PUBLIC_KEY);
   const config = {
     public_key: 'FLWPUBK_TEST-d49c3523fcc5e74b751c102027d18ba4-X',
     tx_ref: Date.now(),

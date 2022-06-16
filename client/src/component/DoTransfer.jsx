@@ -76,21 +76,21 @@ export default function DoTransfer() {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then((response) => {
-        console.log('...', response.data);
+        //console.log('...', response.data);
         if (response.data.success) {
           setConvertMoney(response?.data?.data?.data?.source?.amount);
           setRate(response?.data?.data?.data?.rate);
           setDisable(false);
         } else {
-          console.log('hi');
+          //console.log('hi');
         }
       })
       .catch((error) => {
-        console.log('Errorsss', error);
+        console.log('Error', error);
       });
   }
-  console.log('@', convertMoney);
-  console.log('@', rate);
+  //console.log('@', convertMoney);
+  //console.log('@', rate);
   return (
     <>
       <h2 className="mb-2">Transfer a money with flutterwave</h2>
@@ -195,13 +195,14 @@ export default function DoTransfer() {
               />
             </div>
           </div>
-          <div style={{ fontSize: '13px' }}>
-            {amount != ''
-              ? convertMoney != null
-                ? `Total amount is ${sourceCurrency} ${convertMoney} at rate ${rate}`
-                : 'fetching a data...'
-              : null}
-          </div>
+
+          {amount != '' ? (
+            <div className="rateDiv mt-3" style={{ fontSize: '14px' }}>
+              {convertMoney != null
+                ? `${sourceCurrency} ${convertMoney} = ${destinationCurrency} ${amount} at rate ${rate}`
+                : 'fetching a data...'}
+            </div>
+          ) : null}
           <button
             type="submit"
             className="btn btn-primary mt-3 w-100"

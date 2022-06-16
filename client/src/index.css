@@ -17,3 +17,9 @@ code {
 .formDiv form label {
   font-size: 15px;
 }
+.rateDiv {
+  padding: 3px;
+  border-radius: 5px;
+  margin-top: 6px !important;
+  background: #45596d;
+}
