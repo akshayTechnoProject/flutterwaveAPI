@@ -13,7 +13,7 @@ export default function DoTransfer() {
   const [sourceCurrency, setSourceCurrency] = useState('NGN');
   const [destinationCurrency, setDestinationCurrency] = useState('NGN');
   const config = {
-    public_key: process.env.REACT_APP_API_PUBLIC_KEY,
+    public_key: 'FLWPUBK_TEST-d77c0ba4c8c6b947731cb2dfd955afb3-X',
     tx_ref: Date.now(),
     amount: convertMoney,
     currency: sourceCurrency,
@@ -76,7 +76,7 @@ export default function DoTransfer() {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then((response) => {
-        //console.log('...', response.data);
+        console.log('...', response.data);
         if (response.data.success) {
           setConvertMoney(response?.data?.data?.data?.source?.amount);
           setRate(response?.data?.data?.data?.rate);
@@ -190,7 +190,11 @@ export default function DoTransfer() {
                 required
                 onChange={(event) => {
                   event.preventDefault();
-                  getAmount(event.target.value);
+                  getAmount(
+                    event.target.value,
+                    sourceCurrency,
+                    destinationCurrency
+                  );
                 }}
               />
             </div>
