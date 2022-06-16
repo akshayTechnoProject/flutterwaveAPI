@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
-import axios from 'axios';
+import React, { useState } from "react";
+import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
+import axios from "axios";
 
 export default function DoTransfer() {
-  const [email, setEmail] = useState('');
-  const [userName, setUserName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [amount, setAmount] = useState('');
-  const [sourceCurrency, setSourceCurrency] = useState('NGN');
-  const [destinationCurrency, setDestinationCurrency] = useState('NGN');
+  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [amount, setAmount] = useState();
+  const [sourceCurrency, setSourceCurrency] = useState("NGN");
+  const [destinationCurrency, setDestinationCurrency] = useState("NGN");
   const config = {
     public_key: process.env.REACT_APP_API_PUBLIC_KEY,
     tx_ref: Date.now(),
@@ -21,23 +21,23 @@ export default function DoTransfer() {
       name: userName,
     },
     customizations: {
-      title: 'my Payment Title',
-      description: 'Payment for items in cart',
-      logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
+      title: "my Payment Title",
+      description: "Payment for items in cart",
+      logo: "https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
     },
   };
   function validate() {
     let isValide = true;
-    if (email == '') {
+    if (email == "") {
       isValide = false;
     }
-    if (userName == '') {
+    if (userName == "") {
       isValide = false;
     }
-    if (phoneNumber == '') {
+    if (phoneNumber == "") {
       isValide = false;
     }
-    if (amount <= '0') {
+    if (amount <= "0") {
       isValide = false;
     }
     return isValide;
@@ -59,26 +59,26 @@ export default function DoTransfer() {
 
   function getAmount(value) {
     setAmount(value);
-    const myurl = 'http://localhost:3001/api/admin/get-ratedata';
+    const myurl = "http://localhost:3001/api/admin/get-ratedata";
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
-    bodyFormData.append('amount', value);
-    bodyFormData.append('sCurrancy', sourceCurrency);
-    bodyFormData.append('dCurrancy', destinationCurrency);
+    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
+    bodyFormData.append("amount", value);
+    bodyFormData.append("sCurrancy", sourceCurrency);
+    bodyFormData.append("dCurrancy", destinationCurrency);
     axios({
-      method: 'POST',
+      method: "POST",
       url: myurl,
       data: bodyFormData,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
     })
       .then((response) => {
-        console.log('...', response.data);
+        console.log("...", response.data);
         if (response.data.success) {
         } else {
         }
       })
       .catch((error) => {
-        console.log('Errorsss', error);
+        console.log("Errorsss", error);
       });
   }
 
@@ -178,8 +178,8 @@ export default function DoTransfer() {
               />
             </div>
           </div>
-          <div style={{ fontSize: '13px' }}>
-            {amount != '' ? 'fetching a data...' : null}
+          <div style={{ fontSize: "13px" }}>
+            {amount != "" ? "fetching a data..." : null}
           </div>
           <button
             type="submit"
