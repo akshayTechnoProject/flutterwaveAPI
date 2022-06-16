@@ -6,13 +6,16 @@ export default function DoTransfer() {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState("");
+  const [convertMoney, setConvertMoney] = useState();
+  const [rate, setRate] = useState();
+  const [disable, setDisable] = useState(false);
   const [sourceCurrency, setSourceCurrency] = useState("NGN");
   const [destinationCurrency, setDestinationCurrency] = useState("NGN");
   const config = {
     public_key: process.env.REACT_APP_API_PUBLIC_KEY,
     tx_ref: Date.now(),
-    amount: amount,
+    amount: convertMoney,
     currency: sourceCurrency,
     //payment_options: 'card,mobilemoney,ussd',
     customer: {
@@ -57,14 +60,15 @@ export default function DoTransfer() {
     }
   };
 
-  function getAmount(value) {
+  function getAmount(value, sCurrancy, dCurrancy) {
+    setDisable(true);
     setAmount(value);
     const myurl = "http://localhost:3001/api/admin/get-ratedata";
     var bodyFormData = new URLSearchParams();
     bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
     bodyFormData.append("amount", value);
-    bodyFormData.append("sCurrancy", sourceCurrency);
-    bodyFormData.append("dCurrancy", destinationCurrency);
+    bodyFormData.append("sCurrancy", sCurrancy);
+    bodyFormData.append("dCurrancy", dCurrancy);
     axios({
       method: "POST",
       url: myurl,
@@ -74,14 +78,19 @@ export default function DoTransfer() {
       .then((response) => {
         console.log("...", response.data);
         if (response.data.success) {
+          setConvertMoney(response?.data?.data?.data?.source?.amount);
+          setRate(response?.data?.data?.data?.rate);
+          setDisable(false);
         } else {
+          console.log("hi");
         }
       })
       .catch((error) => {
         console.log("Errorsss", error);
       });
   }
-
+  console.log("@", convertMoney);
+  console.log("@", rate);
   return (
     <>
       <h2 className="mb-2">Transfer a money with flutterwave</h2>
@@ -128,7 +137,11 @@ export default function DoTransfer() {
             <select
               id="inputState"
               class="form-control"
-              onChange={(e) => setSourceCurrency(e.target.value)}
+              onChange={(e) => {
+                e.preventDefault();
+                setSourceCurrency(e.target.value);
+                getAmount(amount, e.target.value, destinationCurrency);
+              }}
             >
               <option selected>NGN</option>
               <option>GHS</option>
@@ -144,7 +157,11 @@ export default function DoTransfer() {
             <select
               id="inputState"
               class="form-control"
-              onChange={(e) => setDestinationCurrency(e.target.value)}
+              onChange={(e) => {
+                e.preventDefault();
+                setDestinationCurrency(e.target.value);
+                getAmount(amount, sourceCurrency, e.target.value);
+              }}
             >
               <option selected>NGN</option>
               <option>GHS</option>
@@ -179,14 +196,19 @@ export default function DoTransfer() {
             </div>
           </div>
           <div style={{ fontSize: "13px" }}>
-            {amount != "" ? "fetching a data..." : null}
+            {amount != ""
+              ? convertMoney != null
+                ? `Total amount is ${sourceCurrency} ${convertMoney} at rate ${rate}`
+                : "fetching a data..."
+              : null}
           </div>
           <button
             type="submit"
             className="btn btn-primary mt-3 w-100"
             onClick={submitEvent}
+            disabled={disable}
           >
-            Submit
+            {disable ? "Loading..." : "Submit"}
           </button>
         </form>
         <br />

@@ -351,7 +351,7 @@ exports.rateData = async (req, res) => {
     request(options, function (error, response) {
       if (error) {
         res.status(503).send({
-          success: true,
+          success: false,
           // data: JSON.parse(response.body),
           message: "something went wrong",
         });
