@@ -49,25 +49,24 @@ export default function DoTransfer() {
   const handleFlutterPayment = useFlutterwave(config);
   const submitEvent = (e) => {
     e.preventDefault();
-    console.log(config);
     if (validate()) {
       handleFlutterPayment({
         callback: (response) => {
-          if (response.status === "successful") {
-            setAmount("");
-            setUserName("");
-            setEmail("");
-            setPhoneNumber("");
-            setSourceCurrency("NGN");
-            setDestinationCurrency("NGN");
-            alert("Payment successfull");
-          } else {
-            alert("Something went wrong");
-          }
+          // if (response.status === "successful") {
+          //   alert("Payment successfull");
+          // } else {
+          //   alert("Something went wrong");
+          // }
           closePaymentModal(); // this will close the modal programmatically
         },
         onClose: () => {},
       });
+      setAmount("");
+      setUserName("");
+      setEmail("");
+      setPhoneNumber("");
+      setSourceCurrency("NGN");
+      setDestinationCurrency("NGN");
     }
   };
 
