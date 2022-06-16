@@ -24,11 +24,12 @@ export default function DoTransfer() {
       name: userName,
     },
     customizations: {
-      title: "my Payment Title",
+      title: "TruliPay",
       description: "Payment for items in cart",
       logo: "https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
     },
   };
+
   function validate() {
     let isValide = true;
     if (email == "") {
@@ -40,7 +41,7 @@ export default function DoTransfer() {
     if (phoneNumber == "") {
       isValide = false;
     }
-    if (amount <= "0") {
+    if (amount <= 0) {
       isValide = false;
     }
     return isValide;
@@ -48,11 +49,21 @@ export default function DoTransfer() {
   const handleFlutterPayment = useFlutterwave(config);
   const submitEvent = (e) => {
     e.preventDefault();
-    console.log(validate());
+    console.log(config);
     if (validate()) {
       handleFlutterPayment({
         callback: (response) => {
-          console.log(response);
+          if (response.status === "successful") {
+            setAmount("");
+            setUserName("");
+            setEmail("");
+            setPhoneNumber("");
+            setSourceCurrency("NGN");
+            setDestinationCurrency("NGN");
+            alert("Payment successfull");
+          } else {
+            alert("Something went wrong");
+          }
           closePaymentModal(); // this will close the modal programmatically
         },
         onClose: () => {},
