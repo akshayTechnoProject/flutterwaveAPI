@@ -349,12 +349,19 @@ exports.rateData = async (req, res) => {
       },
     };
     request(options, function (error, response) {
-      if (error) throw new Error(error);
-      res.status(200).send({
-        success: true,
-        data: JSON.parse(response.body),
-        message: "rate fatch successfully",
-      });
+      if (error) {
+        res.status(503).send({
+          success: true,
+          // data: JSON.parse(response.body),
+          message: "something went wrong",
+        });
+      } else {
+        res.status(200).send({
+          success: true,
+          data: JSON.parse(response.body),
+          message: "rate fatch successfully",
+        });
+      }
     });
   } else {
     res.status(200).send({
