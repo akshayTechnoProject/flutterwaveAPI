@@ -208,6 +208,7 @@ export default function DoTransfer() {
                 className="form-control"
                 id="exampleInputPassword1"
                 placeholder="Enter amount"
+                value={amount}
                 required
                 onChange={(event) => {
                   event.preventDefault();
