@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
+import axios from 'axios';
 
 export default function DoTransfer() {
   const [email, setEmail] = useState('');
@@ -55,6 +56,31 @@ export default function DoTransfer() {
       });
     }
   };
+
+  function getAmount(value) {
+    setAmount(value);
+    const myurl = 'http://localhost:3001/api/admin/get-ratedata';
+    var bodyFormData = new URLSearchParams();
+    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
+    bodyFormData.append('amount', value);
+    bodyFormData.append('sCurrancy', sourceCurrency);
+    bodyFormData.append('dCurrancy', destinationCurrency);
+    axios({
+      method: 'POST',
+      url: myurl,
+      data: bodyFormData,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    })
+      .then((response) => {
+        console.log('...', response.data);
+        if (response.data.success) {
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.log('Errorsss', error);
+      });
+  }
 
   return (
     <>
@@ -145,7 +171,10 @@ export default function DoTransfer() {
                 id="exampleInputPassword1"
                 placeholder="Enter amount"
                 required
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={(event) => {
+                  event.preventDefault();
+                  getAmount(event.target.value);
+                }}
               />
             </div>
           </div>

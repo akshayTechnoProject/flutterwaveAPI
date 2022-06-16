@@ -53,7 +53,7 @@ async function getData() {
   // console.log(await flw.Charge.card(detail));
   // console.log("hi");
 }
-getData();
+//getData();
 
 async function getData1() {}
 getData1();
