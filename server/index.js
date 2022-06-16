@@ -3,8 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-// const dotenv = require("dotenv");
-// dotenv.config();
+const dotenv = require('dotenv');
+dotenv.config();
 const Flutterwave = require('flutterwave-node-v3');
 var data;
 async function getData() {
@@ -55,20 +55,7 @@ async function getData() {
 }
 getData();
 
-async function getData1() {
-  var request = require('request');
-  var options = {
-    method: 'GET',
-    url: 'https://api.flutterwave.com/v3/transfers/rates?amount=1000&destination_currency=USD&source_currency=NGN',
-    headers: {
-      Authorization: 'Bearer FLWSECK_TEST-16c92b7443385c6465610aec0d6e88b7-X',
-    },
-  };
-  request(options, function (error, response) {
-    if (error) throw new Error(error);
-    console.log(response.body);
-  });
-}
+async function getData1() {}
 getData1();
 const app = express();
 
@@ -106,7 +93,7 @@ app.use(bodyParser.json());
 
 // simple route
 app.get('/', (req, res) => {
-  res.json(data);
+  res.json('flutterwave is live');
 });
 
 require('./routes/admin.routes')(app);
