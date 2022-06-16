@@ -345,7 +345,7 @@ exports.rateData = async (req, res) => {
       method: "GET",
       url: `https://api.flutterwave.com/v3/transfers/rates?amount=${condition.amount}&destination_currency=${condition.dCurrancy}&source_currency=${condition.sCurrancy}`,
       headers: {
-        Authorization: "Bearer FLWSECK_TEST-04b54174dc008a082522de1e0b05f888-X",
+        Authorization: `Bearer ${process.env.FLUTTERWAVE_PRIVATEKEY}`,
       },
     };
     request(options, function (error, response) {
