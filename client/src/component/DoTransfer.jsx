@@ -117,6 +117,7 @@ export default function DoTransfer() {
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
               placeholder="Enter email"
+              value={email}
               required
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -128,6 +129,7 @@ export default function DoTransfer() {
               className="form-control"
               id="exampleInputEmail1"
               placeholder="Enter username"
+              value={userName}
               required
               onChange={(e) => setUserName(e.target.value)}
             />
@@ -139,6 +141,7 @@ export default function DoTransfer() {
               className="form-control"
               id="exampleInputPassword1"
               placeholder="Enter phonenumber"
+              value={phoneNumber}
               required
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
@@ -148,6 +151,7 @@ export default function DoTransfer() {
             <select
               id="inputState"
               class="form-control"
+              value={sourceCurrency}
               onChange={(e) => {
                 e.preventDefault();
                 setSourceCurrency(e.target.value);
@@ -168,6 +172,7 @@ export default function DoTransfer() {
             <select
               id="inputState"
               class="form-control"
+              value={destinationCurrency}
               onChange={(e) => {
                 e.preventDefault();
                 setDestinationCurrency(e.target.value);
