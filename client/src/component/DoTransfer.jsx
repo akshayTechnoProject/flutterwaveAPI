@@ -52,21 +52,27 @@ export default function DoTransfer() {
     if (validate()) {
       handleFlutterPayment({
         callback: (response) => {
-          // if (response.status === "successful") {
-          //   alert("Payment successfull");
-          // } else {
-          //   alert("Something went wrong");
-          // }
+          if (response.status === "successful") {
+            setAmount("");
+            setUserName("");
+            setEmail("");
+            setPhoneNumber("");
+            setSourceCurrency("NGN");
+            setDestinationCurrency("NGN");
+            alert("Payment successfull");
+          } else {
+            alert("Something went wrong");
+          }
           closePaymentModal(); // this will close the modal programmatically
         },
         onClose: () => {},
       });
-      setAmount("");
-      setUserName("");
-      setEmail("");
-      setPhoneNumber("");
-      setSourceCurrency("NGN");
-      setDestinationCurrency("NGN");
+      // setAmount("");
+      // setUserName("");
+      // setEmail("");
+      // setPhoneNumber("");
+      // setSourceCurrency("NGN");
+      // setDestinationCurrency("NGN");
     }
   };
 
@@ -86,7 +92,7 @@ export default function DoTransfer() {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     })
       .then((response) => {
-        //console.log('...', response.data);
+        console.log("...", response.data);
         if (response.data.success) {
           setConvertMoney(response?.data?.data?.data?.source?.amount);
           setRate(response?.data?.data?.data?.rate);
@@ -200,7 +206,11 @@ export default function DoTransfer() {
                 required
                 onChange={(event) => {
                   event.preventDefault();
-                  getAmount(event.target.value);
+                  getAmount(
+                    event.target.value,
+                    sourceCurrency,
+                    destinationCurrency
+                  );
                 }}
               />
             </div>
