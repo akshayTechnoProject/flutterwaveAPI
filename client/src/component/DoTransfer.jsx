@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
-import axios from 'axios';
+import React, { useState } from "react";
+import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
+import axios from "axios";
 
 export default function DoTransfer() {
-  const [email, setEmail] = useState('');
-  const [userName, setUserName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [amount, setAmount] = useState('');
+  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [amount, setAmount] = useState("");
   const [convertMoney, setConvertMoney] = useState();
   const [rate, setRate] = useState();
   const [disable, setDisable] = useState(false);
-  const [sourceCurrency, setSourceCurrency] = useState('NGN');
-  const [destinationCurrency, setDestinationCurrency] = useState('NGN');
+  const [sourceCurrency, setSourceCurrency] = useState("NGN");
+  const [destinationCurrency, setDestinationCurrency] = useState("NGN");
   const config = {
     public_key: 'FLWPUBK_TEST-d77c0ba4c8c6b947731cb2dfd955afb3-X',
     tx_ref: Date.now(),
@@ -24,23 +24,24 @@ export default function DoTransfer() {
       name: userName,
     },
     customizations: {
-      title: 'my Payment Title',
-      description: 'Payment for items in cart',
-      logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
+      title: "TruliPay",
+      description: "Payment for items in cart",
+      logo: "https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
     },
   };
+
   function validate() {
     let isValide = true;
-    if (email == '') {
+    if (email == "") {
       isValide = false;
     }
-    if (userName == '') {
+    if (userName == "") {
       isValide = false;
     }
-    if (phoneNumber == '') {
+    if (phoneNumber == "") {
       isValide = false;
     }
-    if (amount <= '0') {
+    if (amount <= 0) {
       isValide = false;
     }
     return isValide;
@@ -48,11 +49,21 @@ export default function DoTransfer() {
   const handleFlutterPayment = useFlutterwave(config);
   const submitEvent = (e) => {
     e.preventDefault();
-    console.log(validate());
+    console.log(config);
     if (validate()) {
       handleFlutterPayment({
         callback: (response) => {
-          console.log(response);
+          if (response.status === "successful") {
+            setAmount("");
+            setUserName("");
+            setEmail("");
+            setPhoneNumber("");
+            setSourceCurrency("NGN");
+            setDestinationCurrency("NGN");
+            alert("Payment successfull");
+          } else {
+            alert("Something went wrong");
+          }
           closePaymentModal(); // this will close the modal programmatically
         },
         onClose: () => {},
@@ -63,17 +74,17 @@ export default function DoTransfer() {
   function getAmount(value, sCurrancy, dCurrancy) {
     setDisable(true);
     setAmount(value);
-    const myurl = 'http://localhost:3001/api/admin/get-ratedata';
+    const myurl = "http://localhost:3001/api/admin/get-ratedata";
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
-    bodyFormData.append('amount', value);
-    bodyFormData.append('sCurrancy', sCurrancy);
-    bodyFormData.append('dCurrancy', dCurrancy);
+    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
+    bodyFormData.append("amount", value);
+    bodyFormData.append("sCurrancy", sCurrancy);
+    bodyFormData.append("dCurrancy", dCurrancy);
     axios({
-      method: 'POST',
+      method: "POST",
       url: myurl,
       data: bodyFormData,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
     })
       .then((response) => {
         console.log('...', response.data);
@@ -86,7 +97,7 @@ export default function DoTransfer() {
         }
       })
       .catch((error) => {
-        console.log('Error', error);
+        console.log("Error", error);
       });
   }
   //console.log('@', convertMoney);
@@ -200,11 +211,11 @@ export default function DoTransfer() {
             </div>
           </div>
 
-          {amount != '' ? (
-            <div className="rateDiv mt-3" style={{ fontSize: '14px' }}>
+          {amount != "" ? (
+            <div className="rateDiv mt-3" style={{ fontSize: "14px" }}>
               {convertMoney != null
                 ? `${sourceCurrency} ${convertMoney} = ${destinationCurrency} ${amount} at rate ${rate}`
-                : 'fetching a data...'}
+                : "fetching a data..."}
             </div>
           ) : null}
           <button
@@ -213,7 +224,7 @@ export default function DoTransfer() {
             onClick={submitEvent}
             disabled={disable}
           >
-            {disable ? 'Loading...' : 'Submit'}
+            {disable ? "Loading..." : "Submit"}
           </button>
         </form>
         <br />
