@@ -1,16 +1,16 @@
-const express = require('express');
+const express = require("express");
 // const bodyParser = require("body-parser"); /* deprecated */
-const cors = require('cors');
-const bodyParser = require('body-parser');
+const cors = require("cors");
+const bodyParser = require("body-parser");
 
-// const dotenv = require("dotenv");
-// dotenv.config();
-const Flutterwave = require('flutterwave-node-v3');
+const dotenv = require("dotenv");
+dotenv.config();
+const Flutterwave = require("flutterwave-node-v3");
 var data;
 async function getData() {
   const flw = new Flutterwave(
-    'FLWPUBK_TEST-d49c3523fcc5e74b751c102027d18ba4-X',
-    'FLWSECK_TEST-c3a1710c1476914ce9312a7d73397079-X'
+    "FLWPUBK_TEST-d49c3523fcc5e74b751c102027d18ba4-X",
+    "FLWSECK_TEST-c3a1710c1476914ce9312a7d73397079-X"
   );
 
   //   const payload = {
@@ -25,17 +25,17 @@ async function getData() {
   // const Flutterwave = require('flutterwave-node-v3');
   // const flw = new Flutterwave(process.env.FLW_PUBLIC_KEY, process.env.FLW_SECRET_KEY);
   const details = {
-    account_bank: '044',
-    account_number: '0690000040',
+    account_bank: "044",
+    account_number: "0690000040",
     amount: 200,
-    narration: 'Payment for things',
-    currency: 'NGN',
-    reference: 'ghjkfghjjh',
-    callback_url: 'https://webhook.site/b3e505b0-fe02-430e-a538-22bbbce8ce0d',
-    debit_currency: 'NGN',
+    narration: "Payment for things",
+    currency: "NGN",
+    reference: "ghjkfghjjh",
+    callback_url: "https://webhook.site/b3e505b0-fe02-430e-a538-22bbbce8ce0d",
+    debit_currency: "NGN",
   };
   flw.Transfer.initiate(details).then(console.log).catch(console.log);
-  flw.Misc.bvn({ bvn: '123456789010' }).then((response) =>
+  flw.Misc.bvn({ bvn: "123456789010" }).then((response) =>
     console.log(response)
   );
   // const detail = {
@@ -55,20 +55,7 @@ async function getData() {
 }
 getData();
 
-async function getData1() {
-  var request = require('request');
-  var options = {
-    method: 'GET',
-    url: 'https://api.flutterwave.com/v3/transfers/rates?amount=1000&destination_currency=USD&source_currency=NGN',
-    headers: {
-      Authorization: 'Bearer FLWSECK_TEST-04b54174dc008a082522de1e0b05f888-X',
-    },
-  };
-  request(options, function (error, response) {
-    if (error) throw new Error(error);
-    console.log(response.body);
-  });
-}
+async function getData1() {}
 getData1();
 const app = express();
 
@@ -81,7 +68,7 @@ app.use(cors(corsOptions));
 // parse requests of content-type - application/json
 app.use(express.json()); /* bodyParser.json() is deprecated */
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(
@@ -105,11 +92,11 @@ app.use(bodyParser.json());
 //   });
 
 // simple route
-app.get('/', (req, res) => {
-  res.json(data);
+app.get("/", (req, res) => {
+  res.json("flutterwave is live");
 });
 
-require('./routes/admin.routes')(app);
+require("./routes/admin.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3001;
