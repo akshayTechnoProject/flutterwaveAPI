@@ -5,13 +5,14 @@ export default function DoTransfer() {
   const [email, setEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [amount, setAmount] = useState();
-  const [currency, setCurrency] = useState('');
+  const [amount, setAmount] = useState('');
+  const [sourceCurrency, setSourceCurrency] = useState('NGN');
+  const [destinationCurrency, setDestinationCurrency] = useState('NGN');
   const config = {
     public_key: process.env.REACT_APP_API_PUBLIC_KEY,
     tx_ref: Date.now(),
     amount: amount,
-    currency: currency,
+    currency: sourceCurrency,
     //payment_options: 'card,mobilemoney,ussd',
     customer: {
       email: email,
@@ -96,23 +97,12 @@ export default function DoTransfer() {
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </div>
-          <div className="form-group mb-2">
-            <label for="exampleInputPassword1">Amount</label>
-            <input
-              type="number"
-              className="form-control"
-              id="exampleInputPassword1"
-              placeholder="Enter amount"
-              required
-              onChange={(e) => setAmount(e.target.value)}
-            />
-          </div>
           <div class="form-group ">
-            <label for="inputState">Currency</label>
+            <label for="inputState">Source Currency</label>
             <select
               id="inputState"
               class="form-control"
-              onChange={(e) => setCurrency(e.target.value)}
+              onChange={(e) => setSourceCurrency(e.target.value)}
             >
               <option selected>NGN</option>
               <option>GHS</option>
@@ -122,6 +112,45 @@ export default function DoTransfer() {
               <option>SLL</option>
               <option>ZAR</option>
             </select>
+          </div>
+          <div class="form-group ">
+            <label for="inputState">Destination Currency</label>
+            <select
+              id="inputState"
+              class="form-control"
+              onChange={(e) => setDestinationCurrency(e.target.value)}
+            >
+              <option selected>NGN</option>
+              <option>GHS</option>
+              <option>KES</option>
+              <option>TZS</option>
+              <option>UGX</option>
+              <option>SLL</option>
+              <option>ZAR</option>
+            </select>
+          </div>
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword1">Destination Amount</label>
+            <div className="d-flex">
+              <input
+                type="text"
+                className="form-control w-25"
+                id="exampleInputPassword1"
+                disabled
+                value={destinationCurrency}
+              />
+              <input
+                type="number"
+                className="form-control"
+                id="exampleInputPassword1"
+                placeholder="Enter amount"
+                required
+                onChange={(e) => setAmount(e.target.value)}
+              />
+            </div>
+          </div>
+          <div style={{ fontSize: '13px' }}>
+            {amount != '' ? 'fetching a data...' : null}
           </div>
           <button
             type="submit"

@@ -61,7 +61,7 @@ async function getData1() {
     method: 'GET',
     url: 'https://api.flutterwave.com/v3/transfers/rates?amount=1000&destination_currency=USD&source_currency=NGN',
     headers: {
-      Authorization: 'Bearer FLWSECK_TEST-04b54174dc008a082522de1e0b05f888-X',
+      Authorization: 'Bearer FLWSECK_TEST-16c92b7443385c6465610aec0d6e88b7-X',
     },
   };
   request(options, function (error, response) {
