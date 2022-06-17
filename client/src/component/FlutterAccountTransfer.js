@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 
 export default function FlutterAccountTransfer() {
-  const [email, setEmail] = useState("");
+  const [msg, setMsg] = useState();
   const [userName, setUserName] = useState("");
-  const [phoneNumber, setMerchantId] = useState();
+  const [merchantId, setMerchantId] = useState();
   const [amount, setAmount] = useState("");
   const [error, setError] = useState({});
   const [convertMoney, setConvertMoney] = useState();
@@ -15,8 +15,8 @@ export default function FlutterAccountTransfer() {
   function validate() {
     let error = {};
     let isValide = true;
-
-    if (phoneNumber == "") {
+    console.log(merchantId);
+    if (!merchantId) {
       error["merchant"] = "please enter a Merchant ID";
       isValide = false;
     }
@@ -30,9 +30,39 @@ export default function FlutterAccountTransfer() {
   const submitEvent = (e) => {
     e.preventDefault();
     if (validate()) {
+      makeTransfer();
     }
   };
-
+  function makeTransfer() {
+    setDisable(true);
+    const myurl = "http://localhost:3001/api/admin/flutter-transfer";
+    var bodyFormData = new URLSearchParams();
+    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
+    bodyFormData.append("amount", convertMoney);
+    bodyFormData.append("currancy", sourceCurrency);
+    bodyFormData.append("account", merchantId);
+    axios({
+      method: "POST",
+      url: myurl,
+      data: bodyFormData,
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    })
+      .then((response) => {
+        if (response.data.success) {
+          alert("payment successfull");
+          setAmount("");
+          setMerchantId(null);
+          setUserName("");
+          setMsg(null);
+          setSourceCurrency("NGN");
+          setDestinationCurrency("NGN");
+          setDisable(false);
+        }
+      })
+      .catch((error) => {
+        console.log("Error", error);
+      });
+  }
   function getAmount(value, sCurrancy, dCurrancy) {
     setDisable(true);
     setAmount(value);
@@ -59,26 +89,75 @@ export default function FlutterAccountTransfer() {
         console.log("Error", error);
       });
   }
+
+  function getName(id) {
+    setMsg(null);
+    setDisable(true);
+    const myurl = "http://localhost:3001/api/admin/flutter-merchant-id";
+    var bodyFormData = new URLSearchParams();
+    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
+    bodyFormData.append("account", id);
+
+    axios({
+      method: "POST",
+      url: myurl,
+      data: bodyFormData,
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    })
+      .then((response) => {
+        if (response.data.success) {
+          setUserName(response.data.data.account_name);
+          setMsg(null);
+          setDisable(false);
+        }
+      })
+      .catch((error) => {
+        setMsg(error.response.data.data.message);
+
+        setUserName("");
+      });
+  }
   return (
     <>
       <h2 className="mb-2">Transfer a money from flutterwave to flutterwave</h2>
       <div className="transferForm w-25 p-2 formDiv">
         <form>
           <div className="form-group mb-2">
-            <label for="exampleInputPassword1">Merchant ID :</label>
+            <label for="exampleInputPassword2">Merchant ID :</label>
             <input
               type="number"
               className="form-control"
-              id="exampleInputPassword1"
+              id="exampleInputPassword2"
               placeholder="Enter merchant id"
-              value={phoneNumber}
-              required
-              onChange={(e) => setMerchantId(e.target.value)}
+              value={merchantId}
+              onChange={(e) => {
+                setMerchantId(e.target.value);
+                getName(e.target.value);
+              }}
             />
             <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.merchant}
             </div>
           </div>
+          {merchantId ? (
+            userName ? (
+              <div className="rateDiv mt-3" style={{ fontSize: "14px" }}>
+                <label for="exampleInputPassword1">Bussiness name :</label>
+
+                <input
+                  type="text"
+                  className="form-control"
+                  id="exampleInputPassword1"
+                  disabled
+                  value={userName}
+                />
+              </div>
+            ) : (
+              <div className="rateDiv mt-3" style={{ fontSize: "14px" }}>
+                {msg ? msg : "fetching a data..."}
+              </div>
+            )
+          ) : null}
           <div class="form-group ">
             <label for="inputState">Source Currency</label>
             <select

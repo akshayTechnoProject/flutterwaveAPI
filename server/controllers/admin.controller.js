@@ -458,7 +458,7 @@ exports.flutterMerchantId = async (req, res) => {
           res.status(200).send({
             success: true,
             data: response.data,
-            message: "Transfer successfully",
+            message: "Got name successfully",
           });
         }
       })
