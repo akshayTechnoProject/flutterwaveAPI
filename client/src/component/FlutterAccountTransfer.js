@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function FlutterAccountTransfer() {
   const [msg, setMsg] = useState();
   const [userName, setUserName] = useState("");
-  const [merchantId, setMerchantId] = useState();
+  const [merchantId, setMerchantId] = useState("");
   const [amount, setAmount] = useState("");
   const [error, setError] = useState({});
   const [convertMoney, setConvertMoney] = useState();
@@ -15,9 +15,11 @@ export default function FlutterAccountTransfer() {
   function validate() {
     let error = {};
     let isValide = true;
-    console.log(merchantId);
-    if (!merchantId) {
+    if (merchantId == "") {
       error["merchant"] = "please enter a Merchant ID";
+      isValide = false;
+    }
+    if (userName == "") {
       isValide = false;
     }
     if (amount <= 0) {
@@ -33,6 +35,7 @@ export default function FlutterAccountTransfer() {
       makeTransfer();
     }
   };
+
   function makeTransfer() {
     setDisable(true);
     const myurl = "http://localhost:3001/api/admin/flutter-transfer";
@@ -49,14 +52,14 @@ export default function FlutterAccountTransfer() {
     })
       .then((response) => {
         if (response.data.success) {
+          setDisable(false);
           alert("payment successfull");
           setAmount("");
-          setMerchantId(null);
+          setMerchantId("");
           setUserName("");
           setMsg(null);
           setSourceCurrency("NGN");
           setDestinationCurrency("NGN");
-          setDisable(false);
         }
       })
       .catch((error) => {
@@ -245,7 +248,7 @@ export default function FlutterAccountTransfer() {
             onClick={submitEvent}
             disabled={disable}
           >
-            {disable ? "Loading..." : "Submit"}
+            {disable ? "Loading..." : "Pay now"}
           </button>
         </form>
         <br />

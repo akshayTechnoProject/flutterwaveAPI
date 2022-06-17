@@ -448,7 +448,6 @@ exports.flutterMerchantId = async (req, res) => {
     };
     flw.Misc.verify_Account(details)
       .then((response) => {
-        console.log(response);
         if (response.status == "error") {
           res.status(400).send({
             success: false,
