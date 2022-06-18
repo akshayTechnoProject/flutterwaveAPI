@@ -33,6 +33,37 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
+// var axios = require("axios");
+// var data = JSON.stringify({
+//   length: 7,
+//   customer: {
+//     name: "Flutterwave Developers",
+//     email: "keyurgondaliya403@gmail.com",
+//     phone: "9773019727",
+//   },
+//   sender: "Flutterwave Inc.",
+//   send: true,
+//   medium: ["email", "whatsapp", "sms"],
+//   expiry: 5,
+// });
+
+// var config = {
+//   method: "post",
+//   url: "https://api.flutterwave.com/v3/otps",
+//   headers: {
+//     Authorization: `Bearer ${process.env.FLUTTERWAVE_PRIVATEKEY}`,
+//     "Content-Type": "application/json",
+//   },
+//   data: data,
+// };
+
+// axios(config)
+//   .then(function (response) {
+//     console.log(JSON.stringify(response.data));
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
 
 // parse requests of content-type - application/json
 app.use(express.json()); /* bodyParser.json() is deprecated */
