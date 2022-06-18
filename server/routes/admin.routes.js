@@ -9,6 +9,8 @@ module.exports = (app) => {
   router.post("/change-password", admin.changePassword);
   router.post("/upload-img", admin.uploadImg);
   router.post("/get-ratedata", admin.rateData);
+  router.post("/flutter-transfer", admin.flutterTransfer);
+  router.post("/flutter-merchant-id", admin.flutterMerchantId);
 
   app.use("/api/admin", router);
 };
