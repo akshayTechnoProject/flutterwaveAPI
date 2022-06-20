@@ -5,13 +5,15 @@ import DoTransfer from "./component/DoTransfer";
 import FApp from "./component/flutterwavePage";
 import Transaction from "./component/transaction";
 import FlutterAccountTransfer from "./component/FlutterAccountTransfer";
+import BankTransfer from "./component/BankTransfer";
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         {/* <DoTransfer /> */}
         {/* <FApp /> */}
-        <FlutterAccountTransfer />
+        {/* <FlutterAccountTransfer /> */}
+        <BankTransfer />
       </header>
     </div>
   );

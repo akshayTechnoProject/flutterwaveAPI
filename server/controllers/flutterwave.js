@@ -328,3 +328,68 @@ exports.mobileTransfer = async (req, res) => {
     });
   }
 };
+exports.getBankList = async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  if (process.env.ADMIN_AUTH_CODE == req.body.auth_code) {
+    var condition = {
+      bank: req.body.bank,
+    };
+    if (condition.bank) {
+      try {
+        var request = require("request");
+        var options = {
+          method: "GET",
+          url: `https://api.flutterwave.com/v3/banks/${condition.bank}`,
+          headers: {
+            Authorization: `Bearer ${process.env.FLW_SECRET_KEY}`,
+          },
+        };
+        request(options, function (error, response) {
+          if (error) {
+            res.status(503).send({
+              success: false,
+              // data: JSON.parse(response.body),
+              message: "something went wrong",
+            });
+          } else {
+            if (JSON.parse(response.body).status == "success") {
+              res.status(200).send({
+                success: true,
+                data: JSON.parse(response.body),
+                message: "banks fetch successfully",
+              });
+            } else {
+              res.status(400).send({
+                success: false,
+                data: JSON.parse(response.body).message,
+              });
+            }
+          }
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(503).send({
+          success: false,
+          // data: JSON.parse(response.body),
+          message: "something went wrong",
+        });
+      }
+    } else {
+      res.status(400).send({
+        success: false,
+        // data: JSON.parse(response.body),
+        message: "pass all the necessary data",
+      });
+    }
+  } else {
+    res.status(400).send({
+      success: false,
+      data: [],
+      message: "You are not authorized",
+    });
+  }
+};
