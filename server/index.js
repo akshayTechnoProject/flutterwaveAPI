@@ -1,51 +1,51 @@
-const express = require('express');
+const express = require("express");
 // const bodyParser = require("body-parser"); /* deprecated */
-const cors = require('cors');
-const bodyParser = require('body-parser');
+const cors = require("cors");
+const bodyParser = require("body-parser");
 
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
 
-const fs = require('fs');
-var https = require('https');
-const request = require('request');
+const fs = require("fs");
+var https = require("https");
+const request = require("request");
 const app = express();
-var path = require('path');
+var path = require("path");
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-const username = 'DHJJ46XXQKQTSY0N1WYO21nL2e9Q-6Oiltnzu0PxodtyyMtwE';
-const password = '6pumAJNdBhTuMzNqTrI1K ';
-const key = './key_21d8364b-de17-4ef0-851d-3bb105c037bb.pem';
-const cert = './cert.pem';
+const username = "DHJJ46XXQKQTSY0N1WYO21nL2e9Q-6Oiltnzu0PxodtyyMtwE";
+const password = "6pumAJNdBhTuMzNqTrI1K ";
+const key = "./key_21d8364b-de17-4ef0-851d-3bb105c037bb.pem";
+const cert = "./cert.pem";
 const d_t = new Date();
 
 let year = d_t.getFullYear();
-let month = ('0' + (d_t.getMonth() + 1)).slice(-2);
-let day = ('0' + d_t.getDate()).slice(-2);
-let hour = d_t.getHours() < 10 ? '0' + d_t.getHours() : d_t.getHours();
-let minute = d_t.getMinutes() < 10 ? '0' + d_t.getMinutes() : d_t.getMinutes();
-let seconds = d_t.getSeconds() < 10 ? '0' + d_t.getSeconds() : d_t.getSeconds();
+let month = ("0" + (d_t.getMonth() + 1)).slice(-2);
+let day = ("0" + d_t.getDate()).slice(-2);
+let hour = d_t.getHours() < 10 ? "0" + d_t.getHours() : d_t.getHours();
+let minute = d_t.getMinutes() < 10 ? "0" + d_t.getMinutes() : d_t.getMinutes();
+let seconds = d_t.getSeconds() < 10 ? "0" + d_t.getSeconds() : d_t.getSeconds();
 const transmissionDateTime =
-  year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + seconds;
+  year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":" + seconds;
 // prints date & time in YYYY-MM-DDTHH:MM:SS format
-console.log(transmissionDateTime);
+// console.log(transmissionDateTime);
 
 async function helloworld() {
   var options = {
-    hostname: 'sandbox.api.visa.com',
+    hostname: "sandbox.api.visa.com",
     port: 443,
-    uri: 'https://sandbox.api.visa.com/vdp/helloworld',
-    method: 'GET',
+    uri: "https://sandbox.api.visa.com/vdp/helloworld",
+    method: "GET",
     key: fs.readFileSync(key),
     cert: fs.readFileSync(cert),
     headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+      "Content-Type": "application/json",
+      Accept: "application/json",
       Authorization:
-        'Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=',
+        "Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=",
     },
     json: true,
   };
@@ -58,74 +58,74 @@ async function helloworld() {
     console.log(body);
   });
 }
-helloworld();
+// helloworld();
 async function getData1() {
   var options = {
-    hostname: 'sandbox.api.visa.com',
+    hostname: "sandbox.api.visa.com",
     port: 443,
     key: fs.readFileSync(key),
     cert: fs.readFileSync(cert),
     headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+      "Content-Type": "application/json",
+      Accept: "application/json",
       Authorization:
-        'Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=',
+        "Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=",
     },
     json: true,
-    method: 'POST',
-    url: 'https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pushfundstransactions',
+    method: "POST",
+    url: "https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pushfundstransactions",
 
     body: {
-      amount: '1200',
-      senderAddress: '901 Metro Center Blvd',
+      amount: "1200",
+      senderAddress: "901 Metro Center Blvd",
       localTransactionDateTime: transmissionDateTime,
       pointOfServiceData: {
-        panEntryMode: '90',
-        posConditionCode: '00',
-        motoECIIndicator: '0',
+        panEntryMode: "90",
+        posConditionCode: "00",
+        motoECIIndicator: "0",
       },
-      recipientPrimaryAccountNumber: '4761360055652118',
+      recipientPrimaryAccountNumber: "4761360055652118",
       colombiaNationalServiceData: {
-        addValueTaxReturn: '10.00',
-        taxAmountConsumption: '10.00',
-        nationalNetReimbursementFeeBaseAmount: '20.00',
-        addValueTaxAmount: '10.00',
-        nationalNetMiscAmount: '10.00',
-        countryCodeNationalService: '170',
-        nationalChargebackReason: '11',
-        emvTransactionIndicator: '1',
-        nationalNetMiscAmountType: 'A',
-        costTransactionIndicator: '0',
-        nationalReimbursementFee: '20.00',
+        addValueTaxReturn: "10.00",
+        taxAmountConsumption: "10.00",
+        nationalNetReimbursementFeeBaseAmount: "20.00",
+        addValueTaxAmount: "10.00",
+        nationalNetMiscAmount: "10.00",
+        countryCodeNationalService: "170",
+        nationalChargebackReason: "11",
+        emvTransactionIndicator: "1",
+        nationalNetMiscAmountType: "A",
+        costTransactionIndicator: "0",
+        nationalReimbursementFee: "20.00",
       },
       cardAcceptor: {
         address: {
-          country: 'USA',
-          zipCode: '94404',
-          county: 'San Mateo',
-          state: 'CA',
+          country: "USA",
+          zipCode: "94404",
+          county: "San Mateo",
+          state: "CA",
         },
-        idCode: 'VMT200911086070',
-        name: 'Acceptor 1',
-        terminalId: 'TID-9999',
+        idCode: "VMT200911086070",
+        name: "Acceptor 1",
+        terminalId: "TID-9999",
       },
-      senderReference: '',
-      transactionIdentifier: '381228649430011',
-      acquirerCountryCode: '840',
-      acquiringBin: '408999',
-      retrievalReferenceNumber: '330000550000',
-      senderCity: 'Foster City',
-      senderStateCode: 'CA',
-      systemsTraceAuditNumber: '451018',
-      senderName: 'Mohammed Qasim',
-      businessApplicationId: 'AA',
-      settlementServiceIndicator: '9',
-      merchantCategoryCode: '6012',
-      transactionCurrencyCode: 'USD',
-      recipientName: 'rohan',
-      senderCountryCode: '124',
-      sourceOfFundsCode: '05',
-      senderAccountNumber: '4957030420210496',
+      senderReference: "",
+      transactionIdentifier: "381228649430011",
+      acquirerCountryCode: "840",
+      acquiringBin: "408999",
+      retrievalReferenceNumber: "330000550000",
+      senderCity: "Foster City",
+      senderStateCode: "CA",
+      systemsTraceAuditNumber: "451018",
+      senderName: "Mohammed Qasim",
+      businessApplicationId: "AA",
+      settlementServiceIndicator: "9",
+      merchantCategoryCode: "6012",
+      transactionCurrencyCode: "USD",
+      recipientName: "rohan",
+      senderCountryCode: "124",
+      sourceOfFundsCode: "05",
+      senderAccountNumber: "4957030420210496",
     },
   };
   options.agent = new https.Agent(options);
@@ -137,7 +137,7 @@ async function getData1() {
     console.log(body);
   });
 }
-getData1();
+// getData1();
 
 var corsOptions = {
   origin: process.env.MAIN_URL,
@@ -179,7 +179,7 @@ app.use(cors(corsOptions));
 // parse requests of content-type - application/json
 app.use(express.json()); /* bodyParser.json() is deprecated */
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(
@@ -203,11 +203,11 @@ app.use(bodyParser.json());
 //   });
 
 // simple route
-app.get('/', (req, res) => {
-  res.json('flutterwave is live');
+app.get("/", (req, res) => {
+  res.json("flutterwave is live");
 });
 
-require('./routes/admin.routes')(app);
+require("./routes/admin.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3001;
