@@ -31,7 +31,7 @@ let seconds = d_t.getSeconds() < 10 ? '0' + d_t.getSeconds() : d_t.getSeconds();
 const transmissionDateTime =
   year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + seconds;
 // prints date & time in YYYY-MM-DDTHH:MM:SS format
-console.log(transmissionDateTime);
+// console.log(transmissionDateTime);
 
 async function helloworld() {
   var options = {
