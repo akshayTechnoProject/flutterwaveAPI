@@ -6,6 +6,7 @@ import FApp from "./component/flutterwavePage";
 import Transaction from "./component/transaction";
 import FlutterAccountTransfer from "./component/FlutterAccountTransfer";
 import BankTransfer from "./component/BankTransfer";
+import VisaTransfer from "./component/VisaTransfer";
 function App() {
   return (
     <div className="App">
@@ -13,7 +14,8 @@ function App() {
         {/* <DoTransfer /> */}
         {/* <FApp /> */}
         {/* <FlutterAccountTransfer /> */}
-        <BankTransfer />
+        {/* <BankTransfer /> */}
+        <VisaTransfer />
       </header>
     </div>
   );
