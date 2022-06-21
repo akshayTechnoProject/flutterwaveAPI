@@ -59,7 +59,89 @@ async function helloworld() {
   });
 }
 helloworld();
-async function getData1() {
+
+async function postPullFundTransferAPI() {
+  var options = {
+    hostname: 'sandbox.api.visa.com',
+    port: 443,
+    key: fs.readFileSync(key),
+    cert: fs.readFileSync(cert),
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization:
+        'Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=',
+    },
+    json: true,
+    method: 'POST',
+    url: 'https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions',
+
+    body: {
+      surcharge: '11.99',
+      amount: '124.02',
+      localTransactionDateTime: transmissionDateTime,
+      cpsAuthorizationCharacteristicsIndicator: 'Y',
+      riskAssessmentData: {
+        traExemptionIndicator: 'true',
+        trustedMerchantExemptionIndicator: 'true',
+        scpExemptionIndicator: 'true',
+        delegatedAuthenticationIndicator: 'true',
+        lowValueExemptionIndicator: 'true',
+      },
+      colombiaNationalServiceData: {
+        addValueTaxReturn: '10.00',
+        taxAmountConsumption: '10.00',
+        nationalNetReimbursementFeeBaseAmount: '20.00',
+        addValueTaxAmount: '10.00',
+        nationalNetMiscAmount: '10.00',
+        countryCodeNationalService: '170',
+        nationalChargebackReason: '11',
+        emvTransactionIndicator: '1',
+        nationalNetMiscAmountType: 'A',
+        costTransactionIndicator: '0',
+        nationalReimbursementFee: '20.00',
+      },
+      cardAcceptor: {
+        address: {
+          country: 'USA',
+          zipCode: '94404',
+          county: '081',
+          state: 'CA',
+        },
+        idCode: 'ABCD1234ABCD123',
+        name: 'Acceptor 1',
+        terminalId: 'ABCD1234',
+      },
+      acquirerCountryCode: '840',
+      acquiringBin: '408999',
+      senderCurrencyCode: 'USD',
+      retrievalReferenceNumber: '330000550000',
+      addressVerificationData: {
+        street: 'XYZ St',
+        postalCode: '12345',
+      },
+      cavv: '0700100038238906000013405823891061668252',
+      systemsTraceAuditNumber: '451001',
+      businessApplicationId: 'AA',
+      senderPrimaryAccountNumber: '4957030005123304',
+      settlementServiceIndicator: '9',
+      visaMerchantIdentifier: '73625198',
+      foreignExchangeFeeTransaction: '11.99',
+      senderCardExpiryDate: '2020-03',
+      nationalReimbursementFee: '11.22',
+    },
+  };
+  options.agent = new https.Agent(options);
+  request.post(options, (err, res, body) => {
+    if (err) {
+      return console.log(err);
+    }
+    console.log(`Status: ${res.statusCode}`);
+    console.log(body);
+  });
+}
+
+async function postPushFundTransferAPI() {
   var options = {
     hostname: 'sandbox.api.visa.com',
     port: 443,
@@ -110,7 +192,7 @@ async function getData1() {
         terminalId: 'TID-9999',
       },
       senderReference: '',
-      transactionIdentifier: '381228649430011',
+      transactionIdentifier: '271011151518178',
       acquirerCountryCode: '840',
       acquiringBin: '408999',
       retrievalReferenceNumber: '330000550000',
@@ -137,7 +219,56 @@ async function getData1() {
     console.log(body);
   });
 }
-getData1();
+
+function readPullFundsTransaction() {
+  var request = require('request');
+  let statusIdentifier = 123456;
+  var options = {
+    hostname: 'sandbox.api.visa.com',
+    port: 443,
+    method: 'GET',
+    key: fs.readFileSync(key),
+    cert: fs.readFileSync(cert),
+    url: `https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions/${statusIdentifier}`,
+    headers: {
+      Authorization:
+        'Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=',
+    },
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    console.log(response.body);
+  });
+}
+
+function readPushFundsTransaction() {
+  var request = require('request');
+  let statusIdentifier = 123456;
+  var options = {
+    hostname: 'sandbox.api.visa.com',
+    port: 443,
+    method: 'GET',
+    key: fs.readFileSync(key),
+    cert: fs.readFileSync(cert),
+    url: `https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pushfundstransactions/${statusIdentifier}`,
+    headers: {
+      Authorization:
+        'Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=',
+    },
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    console.log(response.body);
+  });
+}
+
+postPullFundTransferAPI();
+
+postPushFundTransferAPI();
+
+readPullFundsTransaction();
+
+readPushFundsTransaction();
 
 var corsOptions = {
   origin: process.env.MAIN_URL,
