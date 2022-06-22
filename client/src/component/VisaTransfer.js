@@ -198,7 +198,7 @@ export default function VisaTransfer() {
               type="text"
               className="form-control"
               id="exampleInputPassword2"
-              placeholder="Enter narration"
+              placeholder="Enter name"
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
@@ -214,7 +214,7 @@ export default function VisaTransfer() {
               type="number"
               className="form-control"
               id="exampleInputPassword2"
-              placeholder="Enter narration"
+              placeholder="Enter amount"
               value={amount}
               onChange={(e) => {
                 setAmount(e.target.value);
@@ -230,7 +230,7 @@ export default function VisaTransfer() {
               type="text"
               className="form-control"
               id="exampleInputPassword2"
-              placeholder="Enter narration"
+              placeholder="Enter address"
               value={address}
               onChange={(e) => {
                 setAddress(e.target.value);
@@ -240,6 +240,8 @@ export default function VisaTransfer() {
               {error.address}
             </div>
           </div>
+          <label for="expiry">Expiry:</label>
+          <input type="month" id="expiry" name="expiry" />
           <button
             type="submit"
             className="btn btn-primary mt-3 w-100"

@@ -262,7 +262,7 @@ function readPushFundsTransaction() {
   });
 }
 
-// postPullFundTransferAPI();
+postPullFundTransferAPI();
 
 // postPushFundTransferAPI();
 
