@@ -163,7 +163,7 @@ async function postPushFundTransferAPI() {
       localTransactionDateTime: transmissionDateTime,
       pointOfServiceData: {
         panEntryMode: '90',
-        posConditionCode: '00',
+        posConditionCode: '0',
         motoECIIndicator: '0',
       },
       recipientPrimaryAccountNumber: '4761360055652118',
@@ -192,13 +192,13 @@ async function postPushFundTransferAPI() {
         terminalId: 'TID-9999',
       },
       senderReference: '',
-      transactionIdentifier: '271011151518178',
+      transactionIdentifier: '381228649430011',
       acquirerCountryCode: '840',
       acquiringBin: '408999',
       retrievalReferenceNumber: '330000550000',
       senderCity: 'Foster City',
       senderStateCode: 'CA',
-      systemsTraceAuditNumber: '451018',
+      systemsTraceAuditNumber: '451000',
       senderName: 'Mohammed Qasim',
       businessApplicationId: 'AA',
       settlementServiceIndicator: '9',
@@ -222,7 +222,7 @@ async function postPushFundTransferAPI() {
 
 function readPullFundsTransaction() {
   var request = require('request');
-  let statusIdentifier = 123456;
+  let statusIdentifier = 271011151518178;
   var options = {
     hostname: 'sandbox.api.visa.com',
     port: 443,
