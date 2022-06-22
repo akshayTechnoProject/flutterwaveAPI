@@ -240,8 +240,8 @@ export default function VisaTransfer() {
               {error.address}
             </div>
           </div>
-          <label for="expiry">Expiry:</label>
-          <input type="month" id="expiry" name="expiry" />
+          {/* <label for="expiry">Expiry:</label>
+          <input type="month" id="expiry" name="expiry" /> */}
           <button
             type="submit"
             className="btn btn-primary mt-3 w-100"
