@@ -2,8 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function VisaTransfer() {
-  const [msg, setMsg] = useState();
-  const [bankList, setbankList] = useState([]);
+  const [fromAccount, setFromAccount] = useState("");
+  const [toAccount, setToAccount] = useState("");
+  const [sCountry, setsCountry] = useState("");
+  const [dCountry, setdCountry] = useState("");
+  const [address, setAddress] = useState("");
+  const [name, setName] = useState("");
+
   const [bank, setBank] = useState("");
   const [country, setCountry] = useState("NG");
   const contryList = [
@@ -32,21 +37,35 @@ export default function VisaTransfer() {
   function validate() {
     let error = {};
     let isValide = true;
-    if (account == "") {
-      error["account"] = "please enter a bank account";
+    if (fromAccount == "") {
+      error["fromAccount"] = "please enter a source bank account";
       isValide = false;
     }
-    if (narration == "") {
-      error["narration"] = "please enter a narration";
+    if (toAccount == "") {
+      error["toAccount"] = "please enter a destination bank account";
+      isValide = false;
+    }
+    if (sCountry == "") {
+      error["sCountry"] = "please enter a Source Country";
 
       isValide = false;
     }
-    if (!bank) {
-      error["bank"] = "please select bank";
+    if (dCountry == "") {
+      error["dCountry"] = "please enter a destination Country";
 
       isValide = false;
     }
-    if (amount <= 0) {
+    if (address == "") {
+      error["address"] = "please enter address";
+
+      isValide = false;
+    }
+    if (name == "") {
+      error["name"] = "please enter name";
+
+      isValide = false;
+    }
+    if (amount <= 0 || amount == "") {
       error["amount"] = "please enter valid amount";
       isValide = false;
     }
@@ -55,7 +74,7 @@ export default function VisaTransfer() {
   }
   const submitEvent = (e) => {
     e.preventDefault();
-    makeTransfer();
+    if (validate()) makeTransfer();
   };
 
   function makeTransfer() {
@@ -87,7 +106,6 @@ export default function VisaTransfer() {
           setAmount("");
           setAccount("");
           setNarration("");
-          setMsg(null);
           setSourceCurrency("NGN");
           setDestinationCurrency("NGN");
           setCountry("NG");
@@ -115,12 +133,11 @@ export default function VisaTransfer() {
               placeholder="Enter Bank Account"
               value="4653459515756154"
               onChange={(e) => {
-                setAccount(e.target.value);
-                // getName(e.target.value);
+                setFromAccount(e.target.value);
               }}
             />
             <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
-              {error.account}
+              {error.fromAccount}
             </div>
           </div>
           <div className="form-group mb-2">
@@ -132,44 +149,43 @@ export default function VisaTransfer() {
               placeholder="Enter Bank Account"
               value="4957030420210496"
               onChange={(e) => {
-                setAccount(e.target.value);
-                // getName(e.target.value);
+                setToAccount(e.target.value);
               }}
             />
             <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
-              {error.account}
+              {error.toAccount}
             </div>
           </div>
           <div className="form-group mb-2">
             <label for="exampleInputPassword2">Source country :</label>
             <input
-              type="text"
+              type="number"
               className="form-control"
               id="exampleInputPassword2"
               placeholder="Enter narration"
               value="124"
               onChange={(e) => {
-                setNarration(e.target.value);
+                setsCountry(e.target.value);
               }}
             />
             <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
-              {error.narration}
+              {error.sCountry}
             </div>
           </div>
           <div className="form-group mb-2">
             <label for="exampleInputPassword2">Destination Country :</label>
             <input
-              type="text"
+              type="number"
               className="form-control"
               id="exampleInputPassword2"
               placeholder="Enter narration"
               value="840"
               onChange={(e) => {
-                setNarration(e.target.value);
+                setdCountry(e.target.value);
               }}
             />
             <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
-              {error.narration}
+              {error.dCountry}
             </div>
           </div>
           <div className="form-group mb-2">
@@ -180,22 +196,28 @@ export default function VisaTransfer() {
               id="exampleInputPassword2"
               placeholder="Enter narration"
               value="Vijay"
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
             />
             <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
-              {error.narration}
+              {error.name}
             </div>
           </div>
           <div className="form-group mb-2">
             <label for="exampleInputPassword2">Amount :</label>
             <input
-              type="text"
+              type="number"
               className="form-control"
               id="exampleInputPassword2"
               placeholder="Enter narration"
               value="120"
+              onChange={(e) => {
+                setAmount(e.target.value);
+              }}
             />
             <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
-              {error.narration}
+              {error.amount}
             </div>
           </div>
           <div className="form-group mb-2">
@@ -206,9 +228,12 @@ export default function VisaTransfer() {
               id="exampleInputPassword2"
               placeholder="Enter narration"
               value="102,block banglet,USA"
+              onChange={(e) => {
+                setAddress(e.target.value);
+              }}
             />
             <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
-              {error.narration}
+              {error.address}
             </div>
           </div>
           <button
