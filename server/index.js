@@ -58,7 +58,7 @@ async function helloworld() {
     console.log(body);
   });
 }
-helloworld();
+// helloworld();
 
 async function postPullFundTransferAPI() {
   var options = {
@@ -161,45 +161,45 @@ async function postPushFundTransferAPI() {
       amount: '1200',
       senderAddress: '901 Metro Center Blvd',
       localTransactionDateTime: transmissionDateTime,
-      pointOfServiceData: {
-        panEntryMode: '90',
-        posConditionCode: '0',
-        motoECIIndicator: '0',
-      },
+      // pointOfServiceData: {
+      //   panEntryMode: "90",
+      //   posConditionCode: "00",
+      //   motoECIIndicator: "0",
+      // },
       recipientPrimaryAccountNumber: '4761360055652118',
       colombiaNationalServiceData: {
-        addValueTaxReturn: '10.00',
-        taxAmountConsumption: '10.00',
+        // addValueTaxReturn: "10.00",
+        // taxAmountConsumption: "10.00",
         nationalNetReimbursementFeeBaseAmount: '20.00',
-        addValueTaxAmount: '10.00',
-        nationalNetMiscAmount: '10.00',
+        // addValueTaxAmount: "10.00",
+        // nationalNetMiscAmount: "10.00",
         countryCodeNationalService: '170',
-        nationalChargebackReason: '11',
-        emvTransactionIndicator: '1',
-        nationalNetMiscAmountType: 'A',
-        costTransactionIndicator: '0',
-        nationalReimbursementFee: '20.00',
+        // nationalChargebackReason: "11",
+        // emvTransactionIndicator: "1",
+        // nationalNetMiscAmountType: "A",
+        // costTransactionIndicator: "0",
+        // nationalReimbursementFee: "20.00",
       },
       cardAcceptor: {
         address: {
           country: 'USA',
           zipCode: '94404',
-          county: 'San Mateo',
+          // county: "San Mateo",
           state: 'CA',
         },
         idCode: 'VMT200911086070',
         name: 'Acceptor 1',
         terminalId: 'TID-9999',
       },
-      senderReference: '',
-      transactionIdentifier: '381228649430011',
+      // senderReference: "",
+      transactionIdentifier: '271011151518178',
       acquirerCountryCode: '840',
       acquiringBin: '408999',
       retrievalReferenceNumber: '330000550000',
-      senderCity: 'Foster City',
-      senderStateCode: 'CA',
-      systemsTraceAuditNumber: '451000',
-      senderName: 'Mohammed Qasim',
+      // senderCity: "Foster City",
+      // senderStateCode: "CA",
+      systemsTraceAuditNumber: '451018',
+      // senderName: "Mohammed Qasim",
       businessApplicationId: 'AA',
       settlementServiceIndicator: '9',
       merchantCategoryCode: '6012',
@@ -222,7 +222,7 @@ async function postPushFundTransferAPI() {
 
 function readPullFundsTransaction() {
   var request = require('request');
-  let statusIdentifier = 271011151518178;
+  let statusIdentifier = 123456;
   var options = {
     hostname: 'sandbox.api.visa.com',
     port: 443,
@@ -262,13 +262,13 @@ function readPushFundsTransaction() {
   });
 }
 
-postPullFundTransferAPI();
+// postPullFundTransferAPI();
 
-postPushFundTransferAPI();
+// postPushFundTransferAPI();
 
-readPullFundsTransaction();
+// readPullFundsTransaction();
 
-readPushFundsTransaction();
+// readPushFundsTransaction();
 
 var corsOptions = {
   origin: process.env.MAIN_URL,

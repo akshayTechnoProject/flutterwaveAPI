@@ -1,6 +1,7 @@
 module.exports = (app) => {
   const admin = require("../controllers/admin.controller.js");
   const flutterwave = require("../controllers/flutterwave.js");
+  const visa = require("../controllers/visa.js");
 
   var router = require("express").Router();
 
@@ -16,6 +17,7 @@ module.exports = (app) => {
   router.post("/bank-transfer", flutterwave.bankTransfer);
   router.post("/mobile-transfer", flutterwave.mobileTransfer);
   router.post("/get-banklist", flutterwave.getBankList);
+  router.post("/visa-transfer", visa.visaBankTransfer);
 
   app.use("/api/admin", router);
 };
