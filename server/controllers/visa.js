@@ -1,7 +1,7 @@
 const username = 'DHJJ46XXQKQTSY0N1WYO21nL2e9Q-6Oiltnzu0PxodtyyMtwE';
 const password = '6pumAJNdBhTuMzNqTrI1K ';
-const key = './key_21d8364b-de17-4ef0-851d-3bb105c037bb copy.pem';
-const cert = './cert copy.pem';
+const key = '../key_21d8364b-de17-4ef0-851d-3bb105c037bb.pem';
+const cert = '../cert.pem';
 const d_t = new Date();
 const fs = require('fs');
 const request = require('request');
@@ -15,7 +15,6 @@ let minute = d_t.getMinutes() < 10 ? '0' + d_t.getMinutes() : d_t.getMinutes();
 let seconds = d_t.getSeconds() < 10 ? '0' + d_t.getSeconds() : d_t.getSeconds();
 const transmissionDateTime =
   year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + seconds;
-
 exports.visaBankTransfer = async (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
@@ -45,8 +44,8 @@ exports.visaBankTransfer = async (req, res) => {
         var options = {
           hostname: 'sandbox.api.visa.com',
           port: 443,
-          key: fs.readFileSync(key),
-          cert: fs.readFileSync(cert),
+          key: fs.readFileSync(require('path').resolve(__dirname, key)),
+          cert: fs.readFileSync(require('path').resolve(__dirname, cert)),
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
