@@ -30,6 +30,8 @@ exports.visaBankTransfer = async (req, res) => {
       rAccount: req.body.rAccount,
       sCountry: req.body.sCountry,
       dCountry: req.body.dCountry,
+      expiry: req.body.expiry,
+      acquiringBin: req.body.acquiringBin,
     };
 
     if (
@@ -41,7 +43,98 @@ exports.visaBankTransfer = async (req, res) => {
       condition.dCountry &&
       condition.name
     ) {
+      var now = new Date();
+      var start = new Date(now.getFullYear(), 0, 0);
+      var diff = now - start;
+      var oneDay = 1000 * 60 * 60 * 24;
+      var day = Math.floor(diff / oneDay);
+
+      let retrievalReferenceNumber =
+        String(now.getFullYear()).slice(-1) +
+        '' +
+        day +
+        '' +
+        String(now.getHours()).padStart(2, '0') +
+        '' +
+        String(now.getTime()).slice(-6);
       try {
+        var options = {
+          hostname: 'sandbox.api.visa.com',
+          port: 443,
+          key: fs.readFileSync(require('path').resolve(__dirname, key)),
+          cert: fs.readFileSync(require('path').resolve(__dirname, cert)),
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization:
+              'Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=',
+          },
+          json: true,
+          method: 'POST',
+          url: 'https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions',
+
+          body: {
+            // surcharge: "11.99",
+            amount: condition.amount,
+            localTransactionDateTime: transmissionDateTime,
+            cpsAuthorizationCharacteristicsIndicator: 'Y',
+            riskAssessmentData: {
+              traExemptionIndicator: 'true',
+              trustedMerchantExemptionIndicator: 'true',
+              scpExemptionIndicator: 'true',
+              delegatedAuthenticationIndicator: 'true',
+              lowValueExemptionIndicator: 'true',
+            },
+            colombiaNationalServiceData: {
+              addValueTaxReturn: '10.00',
+              taxAmountConsumption: '10.00',
+              nationalNetReimbursementFeeBaseAmount: '20.00',
+              addValueTaxAmount: '10.00',
+              nationalNetMiscAmount: '10.00',
+              countryCodeNationalService: '170',
+              nationalChargebackReason: '11',
+              emvTransactionIndicator: '1',
+              nationalNetMiscAmountType: 'A',
+              costTransactionIndicator: '0',
+              nationalReimbursementFee: '20.00',
+            },
+            cardAcceptor: {
+              address: {
+                country: 'USA',
+                zipCode: '94404',
+                county: '081',
+                state: 'CA',
+              },
+              idCode: 'ABCD1234ABCD123',
+              name: 'Acceptor 1',
+              terminalId: 'ABCD1234',
+            },
+            acquirerCountryCode: condition.dCountry,
+            acquiringBin: condition.acquiringBin,
+            senderCurrencyCode: condition.sCountry,
+            retrievalReferenceNumber: retrievalReferenceNumber,
+
+            // cavv: "0700100038238906000013405823891061668252",
+            systemsTraceAuditNumber: '451001',
+            businessApplicationId: 'AA',
+            senderPrimaryAccountNumber: condition.sAccount,
+            settlementServiceIndicator: '9',
+            visaMerchantIdentifier: '73625198',
+            foreignExchangeFeeTransaction: '11.99',
+            senderCardExpiryDate: '2020-03',
+            nationalReimbursementFee: '11.22',
+          },
+        };
+
+        options.agent = new https.Agent(options);
+        request.post(options, (err, res, body) => {
+          if (err) {
+            return console.log(err);
+          }
+          console.log(`Status: ${res.statusCode}`);
+          console.log(body);
+        });
+
         var options = {
           hostname: 'sandbox.api.visa.com',
           port: 443,

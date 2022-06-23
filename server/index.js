@@ -116,11 +116,7 @@ async function postPullFundTransferAPI() {
       acquiringBin: '408999',
       senderCurrencyCode: 'USD',
       retrievalReferenceNumber: '330000550000',
-      addressVerificationData: {
-        street: 'XYZ St',
-        postalCode: '12345',
-      },
-      cavv: '0700100038238906000013405823891061668252',
+
       systemsTraceAuditNumber: '451001',
       businessApplicationId: 'AA',
       senderPrimaryAccountNumber: '4957030005123304',
@@ -138,6 +134,7 @@ async function postPullFundTransferAPI() {
     }
     console.log(`Status: ${res.statusCode}`);
     console.log(body);
+    // console.log(res);
   });
 }
 
