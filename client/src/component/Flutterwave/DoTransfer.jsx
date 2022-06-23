@@ -1,18 +1,20 @@
-import React, { useState } from "react";
-import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
-import axios from "axios";
+import React, { useState } from 'react';
+import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function DoTransfer() {
-  const [email, setEmail] = useState("");
-  const [userName, setUserName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [amount, setAmount] = useState("");
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [amount, setAmount] = useState('');
   const [error, setError] = useState({});
   const [convertMoney, setConvertMoney] = useState();
   const [rate, setRate] = useState();
   const [disable, setDisable] = useState(false);
-  const [sourceCurrency, setSourceCurrency] = useState("NGN");
-  const [destinationCurrency, setDestinationCurrency] = useState("NGN");
+  const [sourceCurrency, setSourceCurrency] = useState('NGN');
+  const [destinationCurrency, setDestinationCurrency] = useState('NGN');
   const config = {
     public_key: process.env.REACT_APP_API_PUBLIC_KEY,
     tx_ref: Date.now(),
@@ -25,29 +27,29 @@ export default function DoTransfer() {
       name: userName,
     },
     customizations: {
-      title: "TruliPay",
-      description: "Payment for items in cart",
-      logo: "https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
+      title: 'TruliPay',
+      description: 'Payment for items in cart',
+      logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
     },
   };
 
   function validate() {
     let error = {};
     let isValide = true;
-    if (email == "") {
+    if (email == '') {
       isValide = false;
-      error["email"] = "please enter a email";
+      error['email'] = 'please enter a email';
     }
-    if (userName == "") {
-      error["userName"] = "please enter a user name";
+    if (userName == '') {
+      error['userName'] = 'please enter a user name';
       isValide = false;
     }
-    if (phoneNumber == "") {
-      error["phoneNumber"] = "please enter a phone number";
+    if (phoneNumber == '') {
+      error['phoneNumber'] = 'please enter a phone number';
       isValide = false;
     }
     if (amount <= 0) {
-      error["amount"] = "please enter valid amount";
+      error['amount'] = 'please enter valid amount';
       isValide = false;
     }
     setError(error);
@@ -59,16 +61,16 @@ export default function DoTransfer() {
     if (validate()) {
       handleFlutterPayment({
         callback: (response) => {
-          if (response.status === "successful") {
-            setAmount("");
-            setUserName("");
-            setEmail("");
-            setPhoneNumber("");
-            setSourceCurrency("NGN");
-            setDestinationCurrency("NGN");
-            alert("Payment successfull");
+          if (response.status === 'successful') {
+            setAmount('');
+            setUserName('');
+            setEmail('');
+            setPhoneNumber('');
+            setSourceCurrency('NGN');
+            setDestinationCurrency('NGN');
+            alert('Payment successfull');
           } else {
-            alert("Something went wrong");
+            alert('Something went wrong');
           }
           closePaymentModal(); // this will close the modal programmatically
         },
@@ -80,17 +82,17 @@ export default function DoTransfer() {
   function getAmount(value, sCurrancy, dCurrancy) {
     setDisable(true);
     setAmount(value);
-    const myurl = "http://localhost:3001/api/admin/get-ratedata";
+    const myurl = 'http://localhost:3001/api/admin/get-ratedata';
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
-    bodyFormData.append("amount", value);
-    bodyFormData.append("sCurrancy", sCurrancy);
-    bodyFormData.append("dCurrancy", dCurrancy);
+    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
+    bodyFormData.append('amount', value);
+    bodyFormData.append('sCurrancy', sCurrancy);
+    bodyFormData.append('dCurrancy', dCurrancy);
     axios({
-      method: "POST",
+      method: 'POST',
       url: myurl,
       data: bodyFormData,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then((response) => {
         if (response.data.success) {
@@ -100,12 +102,36 @@ export default function DoTransfer() {
         }
       })
       .catch((error) => {
-        console.log("Error", error);
+        console.log('Error', error);
       });
   }
   return (
     <>
-      <h2 className="mb-2">Transfer a money with flutterwave</h2>
+      <h2 className="mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          onClick={() => navigate('/flutterwave')}
+          fill="currentColor"
+          className="bi bi-arrow-left"
+          viewBox="0 0 16 16"
+          style={{
+            cursor: 'pointer',
+            fontSize: '40px',
+            marginTop: '0px',
+            marginBottom: '5px',
+            marginRight: '10px',
+            fontWeight: '1000',
+          }}
+        >
+          <path
+            fill-rule="evenodd"
+            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
+          />
+        </svg>
+        Transfer a money with flutterwave
+      </h2>
       <div className="transferForm w-25 p-2 formDiv">
         <form>
           <div className="form-group mb-2">
@@ -122,7 +148,7 @@ export default function DoTransfer() {
               required
               onChange={(e) => setEmail(e.target.value)}
             />
-            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.email}
             </div>
           </div>
@@ -137,7 +163,7 @@ export default function DoTransfer() {
               required
               onChange={(e) => setUserName(e.target.value)}
             />
-            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.userName}
             </div>
           </div>
@@ -152,7 +178,7 @@ export default function DoTransfer() {
               required
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
-            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.phoneNumber}
             </div>
           </div>
@@ -225,16 +251,16 @@ export default function DoTransfer() {
                 }}
               />
             </div>
-            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.amount}
             </div>
           </div>
 
-          {amount != "" ? (
-            <div className="rateDiv mt-3" style={{ fontSize: "14px" }}>
+          {amount != '' ? (
+            <div className="rateDiv mt-3" style={{ fontSize: '14px' }}>
               {convertMoney != null
                 ? `${sourceCurrency} ${convertMoney} = ${destinationCurrency} ${amount} at rate ${rate}`
-                : "fetching a data..."}
+                : 'fetching a data...'}
             </div>
           ) : null}
           <button
@@ -243,7 +269,7 @@ export default function DoTransfer() {
             onClick={submitEvent}
             disabled={disable}
           >
-            {disable ? "Loading..." : "Submit"}
+            {disable ? 'Loading...' : 'Submit'}
           </button>
         </form>
         <br />

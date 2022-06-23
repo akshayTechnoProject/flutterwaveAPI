@@ -7,6 +7,7 @@ import VisaTransfer from './component/Visa/VisaTransfer';
 import { Navigate, Routes, Route } from 'react-router-dom';
 import Home from './component/Home';
 import Flutterwave from './component/Flutterwave/Flutterwave';
+import DoTransfer from './component/Flutterwave/DoTransfer';
 function App() {
   return (
     <div className="App">
@@ -24,6 +25,8 @@ function App() {
             element={<FlutterAccountTransfer />}
           />
           <Route path="/flutterwave-to-bank" exact element={<BankTransfer />} />
+
+          <Route path="/bank-to-flutterwave" exact element={<DoTransfer />} />
 
           <Route path="/visa" exact element={<VisaTransfer />} />
 
