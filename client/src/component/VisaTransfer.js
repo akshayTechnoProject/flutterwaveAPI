@@ -128,6 +128,17 @@ export default function VisaTransfer() {
         setDisable(false);
       });
   }
+  console.log('address', address);
+  console.log('name', name);
+  console.log('amount', amount);
+  console.log('sCountry', sCountry);
+  console.log('dCountry', dCountry);
+  console.log('rAccount', fromAccount);
+  console.log('sAccount', toAccount);
+  console.log('acquiringBin', bin);
+  console.log('expiry', expiry);
+  console.log('senderCurrencyCode', senderCurrencyCode);
+  console.log('transactionCurrencyCode', transactionCurrencyCode);
   return (
     <>
       <h2 className="mb-2">Transfer a money using visa from bank to Bank</h2>
