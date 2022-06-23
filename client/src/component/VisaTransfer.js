@@ -61,7 +61,7 @@ export default function VisaTransfer() {
   };
 
   function makeTransfer() {
-    // setDisable(true);
+    setDisable(true);
 
     const myurl = "http://localhost:3001/api/admin/visa-transfer";
     var bodyFormData = new URLSearchParams();
@@ -87,7 +87,7 @@ export default function VisaTransfer() {
           setDisable(false);
           alert("payment successfull");
         }
-        setDisable(false);
+        // setDisable(false);
       })
 
       .catch((error) => {
@@ -156,7 +156,7 @@ export default function VisaTransfer() {
                 Select Bank
               </option>
               {countryList.map((e, i) => (
-                <option value={e["country-code"]}>
+                <option value={e["alpha-2"]}>
                   {e.name + " (" + e["alpha-2"] + ")"}
                 </option>
               ))}
@@ -183,7 +183,7 @@ export default function VisaTransfer() {
                 Select Bank
               </option>
               {countryList.map((e, i) => (
-                <option value={e["country-code"]}>
+                <option value={e["alpha-2"]}>
                   {e.name + " (" + e["alpha-2"] + ")"}
                 </option>
               ))}
@@ -240,8 +240,8 @@ export default function VisaTransfer() {
               {error.address}
             </div>
           </div>
-          {/* <label for="expiry">Expiry:</label>
-          <input type="month" id="expiry" name="expiry" /> */}
+          <label for="expiry">Expiry:</label>
+          <input type="month" id="expiry" name="expiry" />
           <button
             type="submit"
             className="btn btn-primary mt-3 w-100"

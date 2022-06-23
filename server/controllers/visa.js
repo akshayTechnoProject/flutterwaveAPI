@@ -43,12 +43,26 @@ exports.visaBankTransfer = async (req, res) => {
       condition.dCountry &&
       condition.name
     ) {
+      var now = new Date();
+      var start = new Date(now.getFullYear(), 0, 0);
+      var diff = now - start;
+      var oneDay = 1000 * 60 * 60 * 24;
+      var day = Math.floor(diff / oneDay);
+
+      let retrievalReferenceNumber =
+        String(now.getFullYear()).slice(-1) +
+        "" +
+        day +
+        "" +
+        String(now.getHours()).padStart(2, "0") +
+        "" +
+        String(now.getTime()).slice(-6);
       try {
         var options = {
           hostname: "sandbox.api.visa.com",
           port: 443,
-          key: fs.readFileSync(key),
-          cert: fs.readFileSync(cert),
+          key: fs.readFileSync(require("path").resolve(__dirname, key)),
+          cert: fs.readFileSync(require("path").resolve(__dirname, cert)),
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
@@ -96,14 +110,11 @@ exports.visaBankTransfer = async (req, res) => {
               terminalId: "ABCD1234",
             },
             acquirerCountryCode: condition.dCountry,
-            acquiringBin: "408999",
-            senderCurrencyCode: "USD",
-            retrievalReferenceNumber: "330000550000",
-            addressVerificationData: {
-              street: "XYZ St",
-              postalCode: "12345",
-            },
-            cavv: "0700100038238906000013405823891061668252",
+            acquiringBin: condition.acquiringBin,
+            senderCurrencyCode: condition.sCountry,
+            retrievalReferenceNumber: retrievalReferenceNumber,
+
+            // cavv: "0700100038238906000013405823891061668252",
             systemsTraceAuditNumber: "451001",
             businessApplicationId: "AA",
             senderPrimaryAccountNumber: condition.sAccount,
@@ -114,6 +125,7 @@ exports.visaBankTransfer = async (req, res) => {
             nationalReimbursementFee: "11.22",
           },
         };
+
         options.agent = new https.Agent(options);
         request.post(options, (err, res, body) => {
           if (err) {
