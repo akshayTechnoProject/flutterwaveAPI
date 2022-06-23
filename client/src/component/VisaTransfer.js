@@ -114,7 +114,7 @@ export default function VisaTransfer() {
             `payment successful, Here is your transactionIdentifier code: ${response?.data?.data["push"]?.body?.transactionIdentifier} and approvalCode: ${response?.data?.data["push"]?.body?.approvalCode}`
           );
         }
-        // setDisable(false);
+        setDisable(false);
       })
 
       .catch((error) => {
@@ -380,7 +380,15 @@ export default function VisaTransfer() {
     </>
   );
 }
+
+//TEST-DATA
+
 //4957030420210496
-//4957030420210496
+//4761360055652118
+//US
+//IN
+//408999
 //Acceptor 1
+//100
 //CA,USA
+//03-2020
