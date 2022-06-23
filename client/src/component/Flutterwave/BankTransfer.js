@@ -1,53 +1,55 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function BankTransfer() {
+  const navigate = useNavigate();
   const [msg, setMsg] = useState();
   const [bankList, setbankList] = useState([]);
-  const [bank, setBank] = useState("");
-  const [country, setCountry] = useState("NG");
+  const [bank, setBank] = useState('');
+  const [country, setCountry] = useState('NG');
   const contryList = [
-    "GH",
-    "KE",
-    "UG",
-    "TZ",
-    "ZA",
-    "ZM",
-    "CM",
-    "CI",
-    "SL",
-    "ML",
-    "SN",
-    "RW",
+    'GH',
+    'KE',
+    'UG',
+    'TZ',
+    'ZA',
+    'ZM',
+    'CM',
+    'CI',
+    'SL',
+    'ML',
+    'SN',
+    'RW',
   ];
-  const [narration, setNarration] = useState("");
-  const [account, setAccount] = useState("");
-  const [amount, setAmount] = useState("");
+  const [narration, setNarration] = useState('');
+  const [account, setAccount] = useState('');
+  const [amount, setAmount] = useState('');
   const [error, setError] = useState({});
   const [convertMoney, setConvertMoney] = useState();
   const [rate, setRate] = useState();
   const [disable, setDisable] = useState(false);
-  const [sourceCurrency, setSourceCurrency] = useState("NGN");
-  const [destinationCurrency, setDestinationCurrency] = useState("NGN");
+  const [sourceCurrency, setSourceCurrency] = useState('NGN');
+  const [destinationCurrency, setDestinationCurrency] = useState('NGN');
   function validate() {
     let error = {};
     let isValide = true;
-    if (account == "") {
-      error["account"] = "please enter a bank account";
+    if (account == '') {
+      error['account'] = 'please enter a bank account';
       isValide = false;
     }
-    if (narration == "") {
-      error["narration"] = "please enter a narration";
+    if (narration == '') {
+      error['narration'] = 'please enter a narration';
 
       isValide = false;
     }
     if (!bank) {
-      error["bank"] = "please select bank";
+      error['bank'] = 'please select bank';
 
       isValide = false;
     }
     if (amount <= 0) {
-      error["amount"] = "please enter valid amount";
+      error['amount'] = 'please enter valid amount';
       isValide = false;
     }
     setError(error);
@@ -62,32 +64,32 @@ export default function BankTransfer() {
 
   function makeTransfer() {
     setDisable(true);
-    const myurl = "http://localhost:3001/api/admin/bank-transfer";
+    const myurl = 'http://localhost:3001/api/admin/bank-transfer';
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
-    bodyFormData.append("narration", narration);
-    bodyFormData.append("code", bank);
-    bodyFormData.append("amount", convertMoney);
-    bodyFormData.append("currancy", sourceCurrency);
-    bodyFormData.append("account", account);
+    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
+    bodyFormData.append('narration', narration);
+    bodyFormData.append('code', bank);
+    bodyFormData.append('amount', convertMoney);
+    bodyFormData.append('currancy', sourceCurrency);
+    bodyFormData.append('account', account);
     axios({
-      method: "POST",
+      method: 'POST',
       url: myurl,
       data: bodyFormData,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then((response) => {
         if (response.data.success) {
           setDisable(false);
-          alert("payment successfull");
-          setAmount("");
-          setAccount("");
-          setNarration("");
+          alert('payment successfull');
+          setAmount('');
+          setAccount('');
+          setNarration('');
           setMsg(null);
-          setSourceCurrency("NGN");
-          setDestinationCurrency("NGN");
-          setCountry("NG");
-          setBank("");
+          setSourceCurrency('NGN');
+          setDestinationCurrency('NGN');
+          setCountry('NG');
+          setBank('');
         }
       })
 
@@ -99,17 +101,17 @@ export default function BankTransfer() {
   function getAmount(value, sCurrancy, dCurrancy) {
     setDisable(true);
     setAmount(value);
-    const myurl = "http://localhost:3001/api/admin/get-ratedata";
+    const myurl = 'http://localhost:3001/api/admin/get-ratedata';
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
-    bodyFormData.append("amount", value);
-    bodyFormData.append("sCurrancy", sCurrancy);
-    bodyFormData.append("dCurrancy", dCurrancy);
+    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
+    bodyFormData.append('amount', value);
+    bodyFormData.append('sCurrancy', sCurrancy);
+    bodyFormData.append('dCurrancy', dCurrancy);
     axios({
-      method: "POST",
+      method: 'POST',
       url: myurl,
       data: bodyFormData,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then((response) => {
         if (response.data.success) {
@@ -119,21 +121,21 @@ export default function BankTransfer() {
         }
       })
       .catch((error) => {
-        console.log("Error", error);
+        console.log('Error', error);
       });
   }
   useEffect(() => {
     setDisable(true);
-    const myurl = "http://localhost:3001/api/admin/get-banklist";
+    const myurl = 'http://localhost:3001/api/admin/get-banklist';
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
-    bodyFormData.append("bank", country);
+    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
+    bodyFormData.append('bank', country);
 
     axios({
-      method: "POST",
+      method: 'POST',
       url: myurl,
       data: bodyFormData,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then((response) => {
         if (response.data.success) {
@@ -176,7 +178,31 @@ export default function BankTransfer() {
   //   }
   return (
     <>
-      <h2 className="mb-2">Transfer a money from flutterwave to Bank</h2>
+      <h2 className="mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          onClick={() => navigate('/flutterwave')}
+          fill="currentColor"
+          className="bi bi-arrow-left"
+          viewBox="0 0 16 16"
+          style={{
+            cursor: 'pointer',
+            fontSize: '40px',
+            marginTop: '0px',
+            marginBottom: '5px',
+            marginRight: '10px',
+            fontWeight: '1000',
+          }}
+        >
+          <path
+            fill-rule="evenodd"
+            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
+          />
+        </svg>
+        Transfer a money from flutterwave to Bank
+      </h2>
       <div className="transferForm w-25 p-2 formDiv">
         <form>
           <div className="form-group mb-2">
@@ -192,7 +218,7 @@ export default function BankTransfer() {
                 // getName(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.account}
             </div>
           </div>
@@ -208,7 +234,7 @@ export default function BankTransfer() {
                 setNarration(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.narration}
             </div>
           </div>
@@ -238,7 +264,7 @@ export default function BankTransfer() {
                 value={bank}
                 onChange={(e) => {
                   e.preventDefault();
-                  if (e.target.value == "Select Bank") setBank("");
+                  if (e.target.value == 'Select Bank') setBank('');
                   else setBank(e.target.value);
                 }}
               >
@@ -249,7 +275,7 @@ export default function BankTransfer() {
                   <option value={e.code}>{e.name}</option>
                 ))}
               </select>
-              <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+              <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
                 {error.bank}
               </div>
             </div>
@@ -323,16 +349,16 @@ export default function BankTransfer() {
                 }}
               />
             </div>
-            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.amount}
             </div>
           </div>
 
-          {amount != "" ? (
-            <div className="rateDiv mt-3" style={{ fontSize: "14px" }}>
+          {amount != '' ? (
+            <div className="rateDiv mt-3" style={{ fontSize: '14px' }}>
               {convertMoney != null
                 ? `${sourceCurrency} ${convertMoney} = ${destinationCurrency} ${amount} at rate ${rate}`
-                : "fetching a data..."}
+                : 'fetching a data...'}
             </div>
           ) : null}
           <button
@@ -341,7 +367,7 @@ export default function BankTransfer() {
             onClick={submitEvent}
             disabled={disable}
           >
-            {disable ? "Loading..." : "Pay now"}
+            {disable ? 'Loading...' : 'Pay now'}
           </button>
         </form>
         <br />
