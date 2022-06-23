@@ -1,25 +1,25 @@
-const username = 'DHJJ46XXQKQTSY0N1WYO21nL2e9Q-6Oiltnzu0PxodtyyMtwE';
-const password = '6pumAJNdBhTuMzNqTrI1K ';
-const key = '../key_21d8364b-de17-4ef0-851d-3bb105c037bb.pem';
-const cert = '../cert.pem';
+const username = "DHJJ46XXQKQTSY0N1WYO21nL2e9Q-6Oiltnzu0PxodtyyMtwE";
+const password = "6pumAJNdBhTuMzNqTrI1K ";
+const key = "../key_21d8364b-de17-4ef0-851d-3bb105c037bb.pem";
+const cert = "../cert.pem";
 const d_t = new Date();
-const fs = require('fs');
-const request = require('request');
+const fs = require("fs");
+const request = require("request");
 
-var https = require('https');
+var https = require("https");
 let year = d_t.getFullYear();
-let month = ('0' + (d_t.getMonth() + 1)).slice(-2);
-let day = ('0' + d_t.getDate()).slice(-2);
-let hour = d_t.getHours() < 10 ? '0' + d_t.getHours() : d_t.getHours();
-let minute = d_t.getMinutes() < 10 ? '0' + d_t.getMinutes() : d_t.getMinutes();
-let seconds = d_t.getSeconds() < 10 ? '0' + d_t.getSeconds() : d_t.getSeconds();
+let month = ("0" + (d_t.getMonth() + 1)).slice(-2);
+let day = ("0" + d_t.getDate()).slice(-2);
+let hour = d_t.getHours() < 10 ? "0" + d_t.getHours() : d_t.getHours();
+let minute = d_t.getMinutes() < 10 ? "0" + d_t.getMinutes() : d_t.getMinutes();
+let seconds = d_t.getSeconds() < 10 ? "0" + d_t.getSeconds() : d_t.getSeconds();
 const transmissionDateTime =
-  year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + seconds;
+  year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":" + seconds;
 exports.visaBankTransfer = async (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Origin", "*");
   res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
   );
   if (process.env.ADMIN_AUTH_CODE == req.body.auth_code) {
     var condition = {
@@ -28,22 +28,25 @@ exports.visaBankTransfer = async (req, res) => {
       name: req.body.name,
       sAccount: req.body.sAccount,
       rAccount: req.body.rAccount,
-      sCountry: req.body.sCountry,
-      dCountry: req.body.dCountry,
+      senderCountrycode: req.body.senderCountrycode,
+      acquirerCountryCode: req.body.acquirerCountryCode,
       expiry: req.body.expiry,
       acquiringBin: req.body.acquiringBin,
+      senderCurrencyCode: req.body.senderCurrencyCode,
+      transactionCurrencyCode: req.body.transactionCurrencyCode,
     };
-
     if (
       condition.senderAddress &&
       condition.amount &&
       condition.sAccount &&
       condition.rAccount &&
-      condition.sCountry &&
-      condition.dCountry &&
+      condition.senderCountrycode &&
+      condition.acquirerCountryCode &&
       condition.name &&
       condition.expiry &&
-      condition.acquiringBin
+      condition.acquiringBin &&
+      condition.senderCurrencyCode &&
+      condition.transactionCurrencyCode
     ) {
       var now = new Date();
       var start = new Date(now.getFullYear(), 0, 0);
@@ -53,104 +56,94 @@ exports.visaBankTransfer = async (req, res) => {
 
       let retrievalReferenceNumber =
         String(now.getFullYear()).slice(-1) +
-        '' +
+        "" +
         day +
-        '' +
-        String(now.getHours()).padStart(2, '0') +
-        '' +
+        "" +
+        String(now.getHours()).padStart(2, "0") +
+        "" +
         String(now.getTime()).slice(-6);
       try {
         var options = {
-          hostname: 'sandbox.api.visa.com',
+          hostname: "sandbox.api.visa.com",
           port: 443,
-          key: fs.readFileSync(require('path').resolve(__dirname, key)),
-          cert: fs.readFileSync(require('path').resolve(__dirname, cert)),
+          key: fs.readFileSync(require("path").resolve(__dirname, key)),
+          cert: fs.readFileSync(require("path").resolve(__dirname, cert)),
           headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
+            "Content-Type": "application/json",
+            Accept: "application/json",
             Authorization:
-              'Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=',
+              "Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=",
           },
           json: true,
-          method: 'POST',
-          url: 'https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions',
+          method: "POST",
+          url: "https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions",
 
           body: {
             // surcharge: "11.99",
             amount: condition.amount,
             localTransactionDateTime: transmissionDateTime,
-            cpsAuthorizationCharacteristicsIndicator: 'Y',
+            cpsAuthorizationCharacteristicsIndicator: "Y",
             riskAssessmentData: {
-              traExemptionIndicator: 'true',
-              trustedMerchantExemptionIndicator: 'true',
-              scpExemptionIndicator: 'true',
-              delegatedAuthenticationIndicator: 'true',
-              lowValueExemptionIndicator: 'true',
+              traExemptionIndicator: "true",
+              trustedMerchantExemptionIndicator: "true",
+              scpExemptionIndicator: "true",
+              delegatedAuthenticationIndicator: "true",
+              lowValueExemptionIndicator: "true",
             },
             colombiaNationalServiceData: {
-              addValueTaxReturn: '10.00',
-              taxAmountConsumption: '10.00',
-              nationalNetReimbursementFeeBaseAmount: '20.00',
-              addValueTaxAmount: '10.00',
-              nationalNetMiscAmount: '10.00',
-              countryCodeNationalService: '170',
-              nationalChargebackReason: '11',
-              emvTransactionIndicator: '1',
-              nationalNetMiscAmountType: 'A',
-              costTransactionIndicator: '0',
-              nationalReimbursementFee: '20.00',
+              addValueTaxReturn: "10.00",
+              taxAmountConsumption: "10.00",
+              nationalNetReimbursementFeeBaseAmount: "20.00",
+              addValueTaxAmount: "10.00",
+              nationalNetMiscAmount: "10.00",
+              countryCodeNationalService: "170",
+              nationalChargebackReason: "11",
+              emvTransactionIndicator: "1",
+              nationalNetMiscAmountType: "A",
+              costTransactionIndicator: "0",
+              nationalReimbursementFee: "20.00",
             },
             cardAcceptor: {
               address: {
-                country: 'USA',
-                zipCode: '94404',
-                county: '081',
-                state: 'CA',
+                country: "USA",
+                zipCode: "94404",
+                county: "081",
+                state: "CA",
               },
-              idCode: 'ABCD1234ABCD123',
-              name: 'Acceptor 1',
-              terminalId: 'ABCD1234',
+              idCode: "ABCD1234ABCD123",
+              name: "Acceptor 1",
+              terminalId: "ABCD1234",
             },
-            acquirerCountryCode: condition.dCountry,
+            acquirerCountryCode: condition.acquirerCountryCode,
             acquiringBin: condition.acquiringBin,
-            senderCurrencyCode: condition.sCountry,
+            senderCurrencyCode: condition.senderCurrencyCode,
             retrievalReferenceNumber: retrievalReferenceNumber,
 
             // cavv: "0700100038238906000013405823891061668252",
-            systemsTraceAuditNumber: '451001',
-            businessApplicationId: 'AA',
+            systemsTraceAuditNumber: "451001",
+            businessApplicationId: "AA",
             senderPrimaryAccountNumber: condition.sAccount,
-            settlementServiceIndicator: '9',
-            visaMerchantIdentifier: '73625198',
-            foreignExchangeFeeTransaction: '11.99',
-            senderCardExpiryDate: '2020-03',
-            nationalReimbursementFee: '11.22',
+            settlementServiceIndicator: "9",
+            visaMerchantIdentifier: "73625198",
+            foreignExchangeFeeTransaction: "11.99",
+            senderCardExpiryDate: "2020-03",
+            nationalReimbursementFee: "11.22",
           },
         };
-
-        options.agent = new https.Agent(options);
-        request.post(options, (err, res, body) => {
-          if (err) {
-            return console.log(err);
-          }
-          console.log(`Status: ${res.statusCode}`);
-          console.log(body);
-        });
-
-        var options = {
-          hostname: 'sandbox.api.visa.com',
+        var pushOptions = {
+          hostname: "sandbox.api.visa.com",
           port: 443,
-          key: fs.readFileSync(require('path').resolve(__dirname, key)),
-          cert: fs.readFileSync(require('path').resolve(__dirname, cert)),
+          key: fs.readFileSync(require("path").resolve(__dirname, key)),
+          cert: fs.readFileSync(require("path").resolve(__dirname, cert)),
           headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
+            "Content-Type": "application/json",
+            Accept: "application/json",
             Authorization:
-              'Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=',
+              "Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=",
           },
           json: true,
-          method: 'POST',
-          url: 'https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pushfundstransactions',
+          method: "POST",
+          url: "https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pushfundstransactions",
 
           body: {
             amount: condition.amount,
@@ -165,10 +158,10 @@ exports.visaBankTransfer = async (req, res) => {
             colombiaNationalServiceData: {
               // addValueTaxReturn: "10.00",
               // taxAmountConsumption: "10.00",
-              nationalNetReimbursementFeeBaseAmount: '20.00',
+              nationalNetReimbursementFeeBaseAmount: "20.00",
               // addValueTaxAmount: "10.00",
               // nationalNetMiscAmount: "10.00",
-              countryCodeNationalService: '170',
+              countryCodeNationalService: "170",
               // nationalChargebackReason: "11",
               // emvTransactionIndicator: "1",
               // nationalNetMiscAmountType: "A",
@@ -177,53 +170,70 @@ exports.visaBankTransfer = async (req, res) => {
             },
             cardAcceptor: {
               address: {
-                country: 'USA',
-                zipCode: '94404',
+                country: "USA",
+                zipCode: "94404",
                 // county: "San Mateo",
-                state: 'CA',
+                state: "CA",
               },
-              idCode: 'VMT200911086070',
-              name: 'Acceptor 1',
-              terminalId: 'TID-9999',
+              idCode: "VMT200911086070",
+              name: "Acceptor 1",
+              terminalId: "TID-9999",
             },
             // senderReference: "",
-            transactionIdentifier: '271011151518178',
-            acquirerCountryCode: condition.dCountry,
-            acquiringBin: '408999',
-            retrievalReferenceNumber: '330000550000',
+            // transactionIdentifier: retrievalReferenceNumber,
+            acquirerCountryCode: condition.acquirerCountryCode,
+            acquiringBin: "408999",
+            retrievalReferenceNumber: "330000550000",
             // senderCity: "Foster City",
             // senderStateCode: "CA",
-            systemsTraceAuditNumber: '451018',
+            systemsTraceAuditNumber: "451018",
             // senderName: "Mohammed Qasim",
-            businessApplicationId: 'AA',
-            settlementServiceIndicator: '9',
-            merchantCategoryCode: '6012',
-            transactionCurrencyCode: 'USD',
+            businessApplicationId: "AA",
+            settlementServiceIndicator: "9",
+            merchantCategoryCode: "6012",
+            transactionCurrencyCode: condition.transactionCurrencyCode,
             recipientName: condition.name,
-            senderCountryCode: condition.sCountry,
-            sourceOfFundsCode: '05',
+            senderCountryCode: condition.senderCountrycode,
+            sourceOfFundsCode: "05",
             senderAccountNumber: condition.sAccount,
           },
         };
         options.agent = new https.Agent(options);
-        request.post(options, (err, resp, body) => {
+        request.post(options, (err, resq, body) => {
           if (err) {
             res.status(400).send({
               success: false,
               data: err,
-              // message: "something went wrong",
+              message: "Error in pull request",
             });
-          } else if (resp.statusCode == 200) {
-            res.status(200).send({
-              success: true,
-              data: body,
-              message: 'Visa Transfer successfully',
+          } else if (resq.statusCode == 200) {
+            pushOptions.agent = new https.Agent(pushOptions);
+            request.post(pushOptions, (errp, resp, bodyp) => {
+              if (err) {
+                res.status(400).send({
+                  success: false,
+                  data: errp,
+                  message: "Error in push request",
+                });
+              } else if (resp.statusCode == 200) {
+                res.status(200).send({
+                  success: true,
+                  data: { pull: body, push: bodyp },
+                  message: "Visa Transfer successfully",
+                });
+              } else {
+                res.status(400).send({
+                  success: false,
+                  data: bodyp,
+                  message: "Error in push request",
+                });
+              }
             });
           } else {
             res.status(400).send({
               success: false,
               data: body,
-              // message: "something went wrong",
+              message: "Error in pull request",
             });
           }
         });
@@ -232,21 +242,21 @@ exports.visaBankTransfer = async (req, res) => {
         res.status(400).send({
           success: false,
           data: error,
-          message: 'something went wrong',
+          message: "something went wrong",
         });
       }
     } else {
       res.status(400).send({
         success: false,
         // data: JSON.parse(response.body),
-        message: 'pass all the necessary data',
+        message: "pass all the necessary data",
       });
     }
   } else {
     res.status(400).send({
       success: false,
       data: [],
-      message: 'You are not authorized',
+      message: "You are not authorized",
     });
   }
 };
