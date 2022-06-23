@@ -92,8 +92,8 @@ export default function VisaTransfer() {
     bodyFormData.append('amount', amount);
     bodyFormData.append('sCountry', sCountry);
     bodyFormData.append('dCountry', dCountry);
-    bodyFormData.append('rAccount', toAccount);
-    bodyFormData.append('sAccount', fromAccount);
+    bodyFormData.append('rAccount', fromAccount);
+    bodyFormData.append('sAccount', toAccount);
     bodyFormData.append('acquiringBin', bin);
     bodyFormData.append('expiry', expiry);
     bodyFormData.append('senderCurrencyCode', senderCurrencyCode);
@@ -108,28 +108,26 @@ export default function VisaTransfer() {
       .then((response) => {
         console.log(response);
         if (response?.data?.success) {
-          console.log('#', response.data.data);
+          console.log('#', response?.data?.data);
           setDisable(false);
           alert(
             `payment successful, Here is your transactionIdentifier code: ${response?.data?.data?.transactionIdentifier} and approvalCode: ${response?.data?.data?.approvalCode}`
           );
         }
-        // setDisable(false);
+        setDisable(false);
       })
 
       .catch((error) => {
         if (
-          error.response.data.data.errorMessage.includes(
+          error?.response?.data?.data?.errorMessage.includes(
             'Invalid PAN or TOKEN.'
           )
         )
           alert('Invalid PAN or TOKEN.');
-        alert(error.response.data.data.data.complete_message);
+        alert(error?.response?.data?.data?.data?.complete_message);
         setDisable(false);
       });
   }
-  console.log('@', senderCurrencyCode);
-  console.log('#', transactionCurrencyCode);
   return (
     <>
       <h2 className="mb-2">Transfer a money using visa from bank to Bank</h2>
@@ -379,7 +377,15 @@ export default function VisaTransfer() {
     </>
   );
 }
+
+//TEST-DATA
+
 //4957030420210496
-//4957030420210496
+//4761360055652118
+//US
+//IN
+//408999
 //Acceptor 1
+//100
 //CA,USA
+//03-2020
