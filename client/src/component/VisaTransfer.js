@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import countryData from '../includes/country.json';
+import country from '../includes/country.json';
+import countryData from '../includes/CountryData.json';
 export default function VisaTransfer() {
   const [fromAccount, setFromAccount] = useState('');
   const [toAccount, setToAccount] = useState('');
@@ -10,15 +11,16 @@ export default function VisaTransfer() {
   const [name, setName] = useState('');
   const [expiry, setExpiry] = useState('');
   const [bin, setBIN] = useState('');
+  const [senderCurrencyCode, setSenderCurrencyCode] = useState('');
+  const [transactionCurrencyCode, setTransactionCurrencyCode] = useState('');
 
-  const [countryList, setCountryList] = useState(countryData);
+  const [countryList, setCountryList] = useState(country);
+  const [countryDataList, setCountryDataList] = useState(countryData);
   const [amount, setAmount] = useState('');
   const [error, setError] = useState({});
   const [convertMoney, setConvertMoney] = useState();
   const [rate, setRate] = useState();
   const [disable, setDisable] = useState(false);
-  const [sourceCurrency, setSourceCurrency] = useState('NGN');
-  const [destinationCurrency, setDestinationCurrency] = useState('NGN');
   function validate() {
     let error = {};
     let isValide = true;
@@ -62,6 +64,15 @@ export default function VisaTransfer() {
       error['bin'] = 'please enter bank identification number';
       isValide = false;
     }
+    if (senderCurrencyCode == '') {
+      error['senderCurrencyCode'] = 'please enter sender currency code';
+      isValide = false;
+    }
+    if (transactionCurrencyCode == '') {
+      error['transactionCurrencyCode'] =
+        'please enter transaction currency code';
+      isValide = false;
+    }
     setError(error);
     return isValide;
   }
@@ -81,9 +92,12 @@ export default function VisaTransfer() {
     bodyFormData.append('amount', amount);
     bodyFormData.append('sCountry', sCountry);
     bodyFormData.append('dCountry', dCountry);
-
     bodyFormData.append('rAccount', toAccount);
     bodyFormData.append('sAccount', fromAccount);
+    bodyFormData.append('acquiringBin', bin);
+    bodyFormData.append('expiry', expiry);
+    bodyFormData.append('senderCurrencyCode', senderCurrencyCode);
+    bodyFormData.append('transactionCurrencyCode', transactionCurrencyCode);
 
     axios({
       method: 'POST',
@@ -114,7 +128,8 @@ export default function VisaTransfer() {
         setDisable(false);
       });
   }
-
+  console.log('@', senderCurrencyCode);
+  console.log('#', transactionCurrencyCode);
   return (
     <>
       <h2 className="mb-2">Transfer a money using visa from bank to Bank</h2>
@@ -161,16 +176,25 @@ export default function VisaTransfer() {
               onChange={(e) => {
                 e.preventDefault();
 
-                if (e.target.value == 'Select Bank') setsCountry('');
-                else setsCountry(e.target.value);
+                if (e.target.value == 'Select Bank') {
+                  setsCountry('');
+                  setSenderCurrencyCode('');
+                } else {
+                  setsCountry(e.target.value);
+                  countryDataList.map((event, i) =>
+                    event?.isoNumeric == e.target.value
+                      ? setSenderCurrencyCode(event?.currency?.code)
+                      : null
+                  );
+                }
               }}
             >
               <option selected value="Select Bank">
                 Select Bank
               </option>
-              {countryList.map((e, i) => (
-                <option value={e['alpha-2']}>
-                  {e.name + ' (' + e['alpha-2'] + ')'}
+              {countryDataList.map((e, i) => (
+                <option value={e?.isoNumeric}>
+                  {e?.name + ' (' + e?.isoAlpha2 + ')'}
                 </option>
               ))}
             </select>
@@ -188,16 +212,25 @@ export default function VisaTransfer() {
               onChange={(e) => {
                 e.preventDefault();
 
-                if (e.target.value == 'Select Bank') setdCountry('');
-                else setdCountry(e.target.value);
+                if (e.target.value == 'Select Bank') {
+                  setdCountry('');
+                  setTransactionCurrencyCode('');
+                } else {
+                  setdCountry(e.target.value);
+                  countryDataList.map((event, i) =>
+                    event?.isoNumeric == e.target.value
+                      ? setTransactionCurrencyCode(event?.currency?.code)
+                      : null
+                  );
+                }
               }}
             >
               <option selected value="Select Bank">
                 Select Bank
               </option>
-              {countryList.map((e, i) => (
-                <option value={e['alpha-2']}>
-                  {e.name + ' (' + e['alpha-2'] + ')'}
+              {countryDataList.map((e, i) => (
+                <option value={e?.isoNumeric}>
+                  {e?.name + ' (' + e?.isoAlpha2 + ')'}
                 </option>
               ))}
             </select>
@@ -286,6 +319,42 @@ export default function VisaTransfer() {
             />
             <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.expiry}
+            </div>
+          </div>
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword2">Sender Currency Code :</label>
+            <input
+              type="text"
+              className="form-control"
+              id="exampleInputPassword2"
+              placeholder="Enter sender currency code"
+              disabled
+              value={senderCurrencyCode}
+              onChange={(e) => {
+                setSenderCurrencyCode(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.senderCurrencyCode}
+            </div>
+          </div>
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword2">
+              Transaction Currency Code :
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="exampleInputPassword2"
+              placeholder="Enter transaction currency code"
+              value={transactionCurrencyCode}
+              disabled
+              onChange={(e) => {
+                setTransactionCurrencyCode(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.transactionCurrencyCode}
             </div>
           </div>
 
