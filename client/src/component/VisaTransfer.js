@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import countryData from '../includes/country.json';
 export default function VisaTransfer() {
   const [fromAccount, setFromAccount] = useState('');
   const [toAccount, setToAccount] = useState('');
@@ -9,24 +9,7 @@ export default function VisaTransfer() {
   const [address, setAddress] = useState('');
   const [name, setName] = useState('');
 
-  const [bank, setBank] = useState('');
-  const [country, setCountry] = useState('NG');
-  const contryList = [
-    'GH',
-    'KE',
-    'UG',
-    'TZ',
-    'ZA',
-    'ZM',
-    'CM',
-    'CI',
-    'SL',
-    'ML',
-    'SN',
-    'RW',
-  ];
-  const [narration, setNarration] = useState('');
-  const [account, setAccount] = useState('');
+  const [countryList, setCountryList] = useState(countryData);
   const [amount, setAmount] = useState('');
   const [error, setError] = useState({});
   const [convertMoney, setConvertMoney] = useState();
@@ -78,19 +61,19 @@ export default function VisaTransfer() {
   };
 
   function makeTransfer() {
-    setDisable(true);
+    // setDisable(true);
 
     const myurl = 'http://localhost:3001/api/admin/visa-transfer';
     var bodyFormData = new URLSearchParams();
     bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
-    bodyFormData.append('senderAddress', '102,block banglet,USA');
-    bodyFormData.append('name', 'Vijay');
-    bodyFormData.append('amount', 120);
-    bodyFormData.append('sCountry', 124);
-    bodyFormData.append('dCountry', 849);
+    bodyFormData.append('senderAddress', address);
+    bodyFormData.append('name', name);
+    bodyFormData.append('amount', amount);
+    bodyFormData.append('sCountry', sCountry);
+    bodyFormData.append('dCountry', dCountry);
 
-    bodyFormData.append('rAccount', 4957030420210496);
-    bodyFormData.append('sAccount', 4653459515756154);
+    bodyFormData.append('rAccount', toAccount);
+    bodyFormData.append('sAccount', fromAccount);
 
     axios({
       method: 'POST',
@@ -100,21 +83,24 @@ export default function VisaTransfer() {
     })
       .then((response) => {
         console.log(response);
-        if (response.data.success) {
+        if (response?.data?.success) {
+          console.log('#', response.data.data);
           setDisable(false);
-          alert('payment successfull');
-          setAmount('');
-          setAccount('');
-          setNarration('');
-          setSourceCurrency('NGN');
-          setDestinationCurrency('NGN');
-          setCountry('NG');
-          setBank('');
+          alert(
+            `payment successful, Here is your transactionIdentifier code: ${response?.data?.data?.transactionIdentifier} and approvalCode: ${response?.data?.data?.approvalCode}`
+          );
         }
+        setDisable(false);
       })
 
       .catch((error) => {
-        alert(error?.response?.data?.data?.data?.complete_message);
+        if (
+          error.response.data.data.errorMessage.includes(
+            'Invalid PAN or TOKEN.'
+          )
+        )
+          alert('Invalid PAN or TOKEN.');
+        alert(error.response.data.data.data.complete_message);
         setDisable(false);
       });
   }
@@ -131,7 +117,7 @@ export default function VisaTransfer() {
               className="form-control"
               id="exampleInputPassword2"
               placeholder="Enter Bank Account"
-              value="4653459515756154"
+              value={fromAccount}
               onChange={(e) => {
                 setFromAccount(e.target.value);
               }}
@@ -147,7 +133,7 @@ export default function VisaTransfer() {
               className="form-control"
               id="exampleInputPassword2"
               placeholder="Enter Bank Account"
-              value="4957030420210496"
+              value={toAccount}
               onChange={(e) => {
                 setToAccount(e.target.value);
               }}
@@ -158,44 +144,65 @@ export default function VisaTransfer() {
           </div>
           <div className="form-group mb-2">
             <label for="exampleInputPassword2">Source country :</label>
-            <input
-              type="number"
-              className="form-control"
+            <select
               id="exampleInputPassword2"
-              placeholder="Enter narration"
-              value="124"
+              class="form-control"
+              value={sCountry}
               onChange={(e) => {
-                setsCountry(e.target.value);
+                e.preventDefault();
+
+                if (e.target.value == 'Select Bank') setsCountry('');
+                else setsCountry(e.target.value);
               }}
-            />
+            >
+              <option selected value="Select Bank">
+                Select Bank
+              </option>
+              {countryList.map((e, i) => (
+                <option value={e['country-code']}>
+                  {e.name + ' (' + e['alpha-2'] + ')'}
+                </option>
+              ))}
+            </select>
             <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.sCountry}
             </div>
           </div>
           <div className="form-group mb-2">
             <label for="exampleInputPassword2">Destination Country :</label>
-            <input
-              type="number"
-              className="form-control"
+
+            <select
               id="exampleInputPassword2"
-              placeholder="Enter narration"
-              value="840"
+              class="form-control"
+              value={dCountry}
               onChange={(e) => {
-                setdCountry(e.target.value);
+                e.preventDefault();
+
+                if (e.target.value == 'Select Bank') setdCountry('');
+                else setdCountry(e.target.value);
               }}
-            />
+            >
+              <option selected value="Select Bank">
+                Select Bank
+              </option>
+              {countryList.map((e, i) => (
+                <option value={e['country-code']}>
+                  {e.name + ' (' + e['alpha-2'] + ')'}
+                </option>
+              ))}
+            </select>
             <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.dCountry}
             </div>
           </div>
           <div className="form-group mb-2">
-            <label for="exampleInputPassword2">Sender name :</label>
+            <label for="exampleInputPassword2">Sender name:</label>
             <input
               type="text"
               className="form-control"
               id="exampleInputPassword2"
               placeholder="Enter narration"
-              value="Vijay"
+              value={name}
               onChange={(e) => {
                 setName(e.target.value);
               }}
@@ -211,7 +218,7 @@ export default function VisaTransfer() {
               className="form-control"
               id="exampleInputPassword2"
               placeholder="Enter narration"
-              value="120"
+              value={amount}
               onChange={(e) => {
                 setAmount(e.target.value);
               }}
@@ -227,7 +234,7 @@ export default function VisaTransfer() {
               className="form-control"
               id="exampleInputPassword2"
               placeholder="Enter narration"
-              value="102,block banglet,USA"
+              value={address}
               onChange={(e) => {
                 setAddress(e.target.value);
               }}
@@ -257,3 +264,7 @@ export default function VisaTransfer() {
     </>
   );
 }
+//4957030420210496
+//4957030420210496
+//Acceptor 1
+//CA,USA

@@ -81,25 +81,25 @@ async function postPullFundTransferAPI() {
       amount: '124.02',
       localTransactionDateTime: transmissionDateTime,
       cpsAuthorizationCharacteristicsIndicator: 'Y',
-      riskAssessmentData: {
-        traExemptionIndicator: 'true',
-        trustedMerchantExemptionIndicator: 'true',
-        scpExemptionIndicator: 'true',
-        delegatedAuthenticationIndicator: 'true',
-        lowValueExemptionIndicator: 'true',
-      },
+      //riskAssessmentData: {
+      //  traExemptionIndicator: 'true',
+      //  trustedMerchantExemptionIndicator: 'true',
+      //  scpExemptionIndicator: 'true',
+      //  delegatedAuthenticationIndicator: 'true',
+      //  lowValueExemptionIndicator: 'true',
+      //},
       colombiaNationalServiceData: {
-        addValueTaxReturn: '10.00',
-        taxAmountConsumption: '10.00',
+        //addValueTaxReturn: '10.00',
+        //taxAmountConsumption: '10.00',
         nationalNetReimbursementFeeBaseAmount: '20.00',
-        addValueTaxAmount: '10.00',
-        nationalNetMiscAmount: '10.00',
+        //addValueTaxAmount: '10.00',
+        //nationalNetMiscAmount: '10.00',
         countryCodeNationalService: '170',
-        nationalChargebackReason: '11',
-        emvTransactionIndicator: '1',
-        nationalNetMiscAmountType: 'A',
-        costTransactionIndicator: '0',
-        nationalReimbursementFee: '20.00',
+        //nationalChargebackReason: '11',
+        //emvTransactionIndicator: '1',
+        //nationalNetMiscAmountType: 'A',
+        //costTransactionIndicator: '0',
+        //nationalReimbursementFee: '20.00',
       },
       cardAcceptor: {
         address: {
@@ -262,7 +262,7 @@ function readPushFundsTransaction() {
   });
 }
 
-// postPullFundTransferAPI();
+postPullFundTransferAPI();
 
 // postPushFundTransferAPI();
 

@@ -31,6 +31,7 @@ exports.visaBankTransfer = async (req, res) => {
       sCountry: req.body.sCountry,
       dCountry: req.body.dCountry,
     };
+
     if (
       condition.senderAddress &&
       condition.amount &&
@@ -122,6 +123,12 @@ exports.visaBankTransfer = async (req, res) => {
               success: true,
               data: body,
               message: 'Visa Transfer successfully',
+            });
+          } else {
+            res.status(400).send({
+              success: false,
+              data: body,
+              // message: "something went wrong",
             });
           }
         });
