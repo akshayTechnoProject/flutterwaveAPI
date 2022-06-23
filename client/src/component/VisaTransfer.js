@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import country from '../includes/country.json';
-import countryData from '../includes/CountryData.json';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import country from "../includes/country.json";
+import countryData from "../includes/CountryData.json";
 export default function VisaTransfer() {
-  const [fromAccount, setFromAccount] = useState('');
-  const [toAccount, setToAccount] = useState('');
-  const [sCountry, setsCountry] = useState('');
-  const [dCountry, setdCountry] = useState('');
-  const [address, setAddress] = useState('');
-  const [name, setName] = useState('');
-  const [expiry, setExpiry] = useState('');
-  const [bin, setBIN] = useState('');
-  const [senderCurrencyCode, setSenderCurrencyCode] = useState('');
-  const [transactionCurrencyCode, setTransactionCurrencyCode] = useState('');
+  const [fromAccount, setFromAccount] = useState("");
+  const [toAccount, setToAccount] = useState("");
+  const [sCountry, setsCountry] = useState("");
+  const [dCountry, setdCountry] = useState("");
+  const [address, setAddress] = useState("");
+  const [name, setName] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [bin, setBIN] = useState("");
+  const [senderCurrencyCode, setSenderCurrencyCode] = useState("");
+  const [transactionCurrencyCode, setTransactionCurrencyCode] = useState("");
 
   const [countryList, setCountryList] = useState(country);
   const [countryDataList, setCountryDataList] = useState(countryData);
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState("");
   const [error, setError] = useState({});
   const [convertMoney, setConvertMoney] = useState();
   const [rate, setRate] = useState();
@@ -24,53 +24,53 @@ export default function VisaTransfer() {
   function validate() {
     let error = {};
     let isValide = true;
-    if (fromAccount == '') {
-      error['fromAccount'] = 'please enter a source bank account';
+    if (fromAccount == "") {
+      error["fromAccount"] = "please enter a source bank account";
       isValide = false;
     }
-    if (toAccount == '') {
-      error['toAccount'] = 'please enter a destination bank account';
+    if (toAccount == "") {
+      error["toAccount"] = "please enter a destination bank account";
       isValide = false;
     }
-    if (sCountry == '') {
-      error['sCountry'] = 'please enter a Source Country';
+    if (sCountry == "") {
+      error["sCountry"] = "please enter a Source Country";
 
       isValide = false;
     }
-    if (dCountry == '') {
-      error['dCountry'] = 'please enter a destination Country';
+    if (dCountry == "") {
+      error["dCountry"] = "please enter a destination Country";
 
       isValide = false;
     }
-    if (address == '') {
-      error['address'] = 'please enter address';
+    if (address == "") {
+      error["address"] = "please enter address";
 
       isValide = false;
     }
-    if (name == '') {
-      error['name'] = 'please enter name';
+    if (name == "") {
+      error["name"] = "please enter name";
 
       isValide = false;
     }
-    if (amount <= 0 || amount == '') {
-      error['amount'] = 'please enter valid amount';
+    if (amount <= 0 || amount == "") {
+      error["amount"] = "please enter valid amount";
       isValide = false;
     }
-    if (expiry == '') {
-      error['expiry'] = 'please enter valid date';
+    if (expiry == "") {
+      error["expiry"] = "please enter valid date";
       isValide = false;
     }
-    if (bin == '') {
-      error['bin'] = 'please enter bank identification number';
+    if (bin == "") {
+      error["bin"] = "please enter bank identification number";
       isValide = false;
     }
-    if (senderCurrencyCode == '') {
-      error['senderCurrencyCode'] = 'please enter sender currency code';
+    if (senderCurrencyCode == "") {
+      error["senderCurrencyCode"] = "please enter sender currency code";
       isValide = false;
     }
-    if (transactionCurrencyCode == '') {
-      error['transactionCurrencyCode'] =
-        'please enter transaction currency code';
+    if (transactionCurrencyCode == "") {
+      error["transactionCurrencyCode"] =
+        "please enter transaction currency code";
       isValide = false;
     }
     setError(error);
@@ -84,52 +84,53 @@ export default function VisaTransfer() {
   function makeTransfer() {
     setDisable(true);
 
-    const myurl = 'http://localhost:3001/api/admin/visa-transfer';
+    const myurl = "http://localhost:3001/api/admin/visa-transfer";
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
-    bodyFormData.append('senderAddress', address);
-    bodyFormData.append('name', name);
-    bodyFormData.append('amount', amount);
-    bodyFormData.append('sCountry', sCountry);
-    bodyFormData.append('dCountry', dCountry);
-    bodyFormData.append('rAccount', toAccount);
-    bodyFormData.append('sAccount', fromAccount);
-    bodyFormData.append('acquiringBin', bin);
-    bodyFormData.append('expiry', expiry);
-    bodyFormData.append('senderCurrencyCode', senderCurrencyCode);
-    bodyFormData.append('transactionCurrencyCode', transactionCurrencyCode);
+    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
+    bodyFormData.append("senderAddress", address);
+    bodyFormData.append("name", name);
+    bodyFormData.append("amount", amount);
+    bodyFormData.append("senderCountrycode", sCountry);
+    bodyFormData.append("acquirerCountryCode", dCountry);
+    bodyFormData.append("rAccount", toAccount);
+    bodyFormData.append("sAccount", fromAccount);
+    bodyFormData.append("acquiringBin", bin);
+    bodyFormData.append("expiry", expiry);
+    bodyFormData.append("senderCurrencyCode", senderCurrencyCode);
+    bodyFormData.append("transactionCurrencyCode", transactionCurrencyCode);
 
     axios({
-      method: 'POST',
+      method: "POST",
       url: myurl,
       data: bodyFormData,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
     })
       .then((response) => {
         console.log(response);
         if (response?.data?.success) {
-          console.log('#', response.data.data);
+          console.log("#", response.data.data);
           setDisable(false);
           alert(
-            `payment successful, Here is your transactionIdentifier code: ${response?.data?.data?.transactionIdentifier} and approvalCode: ${response?.data?.data?.approvalCode}`
+            `payment successful, Here is your transactionIdentifier code: ${response?.data?.data["push"]?.body?.transactionIdentifier} and approvalCode: ${response?.data?.data["push"]?.body?.approvalCode}`
           );
         }
         // setDisable(false);
       })
 
       .catch((error) => {
-        if (
-          error.response.data.data.errorMessage.includes(
-            'Invalid PAN or TOKEN.'
-          )
-        )
-          alert('Invalid PAN or TOKEN.');
-        alert(error.response.data.data.data.complete_message);
+        console.log(error);
+        // if (
+        //   error.response?.data?.data?.errorMessage?.includes(
+        //     "Invalid PAN or TOKEN."
+        //   )
+        // )
+        //   alert("Invalid PAN or TOKEN.");
+        alert(error.response.data.data.data.errorMessage);
         setDisable(false);
       });
   }
-  console.log('@', senderCurrencyCode);
-  console.log('#', transactionCurrencyCode);
+  console.log("@", senderCurrencyCode);
+  console.log("#", transactionCurrencyCode);
   return (
     <>
       <h2 className="mb-2">Transfer a money using visa from bank to Bank</h2>
@@ -147,7 +148,7 @@ export default function VisaTransfer() {
                 setFromAccount(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.fromAccount}
             </div>
           </div>
@@ -163,7 +164,7 @@ export default function VisaTransfer() {
                 setToAccount(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.toAccount}
             </div>
           </div>
@@ -176,9 +177,9 @@ export default function VisaTransfer() {
               onChange={(e) => {
                 e.preventDefault();
 
-                if (e.target.value == 'Select Bank') {
-                  setsCountry('');
-                  setSenderCurrencyCode('');
+                if (e.target.value == "Select Bank") {
+                  setsCountry("");
+                  setSenderCurrencyCode("");
                 } else {
                   setsCountry(e.target.value);
                   countryDataList.map((event, i) =>
@@ -194,11 +195,11 @@ export default function VisaTransfer() {
               </option>
               {countryDataList.map((e, i) => (
                 <option value={e?.isoNumeric}>
-                  {e?.name + ' (' + e?.isoAlpha2 + ')'}
+                  {e?.name + " (" + e?.isoAlpha2 + ")"}
                 </option>
               ))}
             </select>
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.sCountry}
             </div>
           </div>
@@ -212,9 +213,9 @@ export default function VisaTransfer() {
               onChange={(e) => {
                 e.preventDefault();
 
-                if (e.target.value == 'Select Bank') {
-                  setdCountry('');
-                  setTransactionCurrencyCode('');
+                if (e.target.value == "Select Bank") {
+                  setdCountry("");
+                  setTransactionCurrencyCode("");
                 } else {
                   setdCountry(e.target.value);
                   countryDataList.map((event, i) =>
@@ -230,11 +231,11 @@ export default function VisaTransfer() {
               </option>
               {countryDataList.map((e, i) => (
                 <option value={e?.isoNumeric}>
-                  {e?.name + ' (' + e?.isoAlpha2 + ')'}
+                  {e?.name + " (" + e?.isoAlpha2 + ")"}
                 </option>
               ))}
             </select>
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.dCountry}
             </div>
           </div>
@@ -252,7 +253,7 @@ export default function VisaTransfer() {
                 setBIN(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.bin}
             </div>
           </div>
@@ -268,7 +269,7 @@ export default function VisaTransfer() {
                 setName(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.name}
             </div>
           </div>
@@ -284,7 +285,7 @@ export default function VisaTransfer() {
                 setAmount(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.amount}
             </div>
           </div>
@@ -300,7 +301,7 @@ export default function VisaTransfer() {
                 setAddress(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.address}
             </div>
           </div>
@@ -317,7 +318,7 @@ export default function VisaTransfer() {
                 //console.log(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.expiry}
             </div>
           </div>
@@ -334,7 +335,7 @@ export default function VisaTransfer() {
                 setSenderCurrencyCode(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.senderCurrencyCode}
             </div>
           </div>
@@ -353,7 +354,7 @@ export default function VisaTransfer() {
                 setTransactionCurrencyCode(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
               {error.transactionCurrencyCode}
             </div>
           </div>
@@ -364,7 +365,7 @@ export default function VisaTransfer() {
             onClick={submitEvent}
             disabled={disable}
           >
-            {disable ? 'Loading...' : 'Pay now'}
+            {disable ? "Loading..." : "Pay now"}
           </button>
         </form>
         <br />
