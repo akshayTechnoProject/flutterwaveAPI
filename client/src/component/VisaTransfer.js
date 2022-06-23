@@ -10,6 +10,8 @@ export default function VisaTransfer() {
   const [name, setName] = useState('');
   const [expiry, setExpiry] = useState('');
   const [bin, setBIN] = useState('');
+  const [senderCurrencyCode, setSenderCurrencyCode] = useState('');
+  const [transactionCurrencyCode, setTransactionCurrencyCode] = useState('');
 
   const [countryList, setCountryList] = useState(countryData);
   const [amount, setAmount] = useState('');
@@ -62,6 +64,15 @@ export default function VisaTransfer() {
       error['bin'] = 'please enter bank identification number';
       isValide = false;
     }
+    if (senderCurrencyCode == '') {
+      error['senderCurrencyCode'] = 'please enter sender currency code';
+      isValide = false;
+    }
+    if (transactionCurrencyCode == '') {
+      error['transactionCurrencyCode'] =
+        'please enter transaction currency code';
+      isValide = false;
+    }
     setError(error);
     return isValide;
   }
@@ -81,9 +92,12 @@ export default function VisaTransfer() {
     bodyFormData.append('amount', amount);
     bodyFormData.append('sCountry', sCountry);
     bodyFormData.append('dCountry', dCountry);
-
     bodyFormData.append('rAccount', toAccount);
     bodyFormData.append('sAccount', fromAccount);
+    bodyFormData.append('acquiringBin', bin);
+    bodyFormData.append('expiry', expiry);
+    bodyFormData.append('senderCurrencyCode', senderCurrencyCode);
+    bodyFormData.append('transactionCurrencyCode', transactionCurrencyCode);
 
     axios({
       method: 'POST',
@@ -286,6 +300,40 @@ export default function VisaTransfer() {
             />
             <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.expiry}
+            </div>
+          </div>
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword2">Sender Currency Code :</label>
+            <input
+              type="text"
+              className="form-control"
+              id="exampleInputPassword2"
+              placeholder="Enter sender currency code"
+              value={senderCurrencyCode}
+              onChange={(e) => {
+                setSenderCurrencyCode(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.senderCurrencyCode}
+            </div>
+          </div>
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword2">
+              Transaction Currency Code :
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="exampleInputPassword2"
+              placeholder="Enter transaction currency code"
+              value={transactionCurrencyCode}
+              onChange={(e) => {
+                setTransactionCurrencyCode(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.transactionCurrencyCode}
             </div>
           </div>
 
