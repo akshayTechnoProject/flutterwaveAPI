@@ -82,7 +82,6 @@ exports.visaBankTransfer = async (req, res) => {
             // surcharge: "11.99",
             amount: condition.amount,
             localTransactionDateTime: transmissionDateTime,
-            cpsAuthorizationCharacteristicsIndicator: "Y",
             riskAssessmentData: {
               traExemptionIndicator: "true",
               trustedMerchantExemptionIndicator: "true",
@@ -199,7 +198,7 @@ exports.visaBankTransfer = async (req, res) => {
           },
         };
         options.agent = new https.Agent(options);
-        request.post(options, (err, resq, body) => {
+        request.post(options, (err, resq, bodyq) => {
           if (err) {
             res.status(400).send({
               success: false,
@@ -209,7 +208,7 @@ exports.visaBankTransfer = async (req, res) => {
           } else if (resq.statusCode == 200) {
             pushOptions.agent = new https.Agent(pushOptions);
             request.post(pushOptions, (errp, resp, bodyp) => {
-              if (err) {
+              if (errp) {
                 res.status(400).send({
                   success: false,
                   data: errp,
@@ -218,7 +217,22 @@ exports.visaBankTransfer = async (req, res) => {
               } else if (resp.statusCode == 200) {
                 res.status(200).send({
                   success: true,
-                  data: { pull: body, push: bodyp },
+                  data: {
+                    pull: {
+                      body: bodyq,
+                      response: {
+                        statusCode: resq.statusCode,
+                        body: resq.body,
+                      },
+                    },
+                    push: {
+                      body: bodyp,
+                      response: {
+                        statusCode: resp.statusCode,
+                        body: resp.body,
+                      },
+                    },
+                  },
                   message: "Visa Transfer successfully",
                 });
               } else {
@@ -232,7 +246,7 @@ exports.visaBankTransfer = async (req, res) => {
           } else {
             res.status(400).send({
               success: false,
-              data: body,
+              data: bodyq,
               message: "Error in pull request",
             });
           }
