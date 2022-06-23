@@ -41,7 +41,9 @@ exports.visaBankTransfer = async (req, res) => {
       condition.rAccount &&
       condition.sCountry &&
       condition.dCountry &&
-      condition.name
+      condition.name &&
+      condition.expiry &&
+      condition.acquiringBin
     ) {
       var now = new Date();
       var start = new Date(now.getFullYear(), 0, 0);
