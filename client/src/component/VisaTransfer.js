@@ -90,14 +90,14 @@ export default function VisaTransfer() {
     bodyFormData.append('senderAddress', address);
     bodyFormData.append('name', name);
     bodyFormData.append('amount', amount);
-    bodyFormData.append('sCountry', sCountry);
-    bodyFormData.append('dCountry', dCountry);
-    bodyFormData.append('rAccount', fromAccount);
-    bodyFormData.append('sAccount', toAccount);
+    bodyFormData.append('senderCountrycode', sCountry);
+    bodyFormData.append('acquirerCountryCode', dCountry);
+    bodyFormData.append('rAccount', toAccount);
+    bodyFormData.append('sAccount', fromAccount);
     bodyFormData.append('acquiringBin', bin);
     bodyFormData.append('expiry', expiry);
     bodyFormData.append('senderCurrencyCode', senderCurrencyCode);
-    bodyFormData.append('transactionCurrencyCode', transactionCurrencyCode);
+    bodyFormData.append('transactionCurrencyCode', senderCurrencyCode);
 
     axios({
       method: 'POST',
@@ -108,37 +108,39 @@ export default function VisaTransfer() {
       .then((response) => {
         console.log(response);
         if (response?.data?.success) {
-          console.log('#', response?.data?.data);
+          console.log('#', response.data.data);
           setDisable(false);
           alert(
-            `payment successful, Here is your transactionIdentifier code: ${response?.data?.data?.transactionIdentifier} and approvalCode: ${response?.data?.data?.approvalCode}`
+            `payment successful, Here is your transactionIdentifier code: ${response?.data?.data['push']?.body?.transactionIdentifier} and approvalCode: ${response?.data?.data['push']?.body?.approvalCode}`
           );
         }
         setDisable(false);
       })
 
       .catch((error) => {
-        if (
-          error?.response?.data?.data?.errorMessage.includes(
-            'Invalid PAN or TOKEN.'
-          )
-        )
-          alert('Invalid PAN or TOKEN.');
-        alert(error?.response?.data?.data?.data?.complete_message);
+        console.log(error);
+        // if (
+        //   error.response?.data?.data?.errorMessage?.includes(
+        //     "Invalid PAN or TOKEN."
+        //   )
+        // )
+        //   alert("Invalid PAN or TOKEN.");
+        alert(error?.response?.data?.data?.data?.errorMessage);
         setDisable(false);
       });
   }
-  console.log('address', address);
-  console.log('name', name);
-  console.log('amount', amount);
-  console.log('sCountry', sCountry);
-  console.log('dCountry', dCountry);
-  console.log('rAccount', fromAccount);
-  console.log('sAccount', toAccount);
-  console.log('acquiringBin', bin);
-  console.log('expiry', expiry);
-  console.log('senderCurrencyCode', senderCurrencyCode);
-  console.log('transactionCurrencyCode', transactionCurrencyCode);
+  //  console.log('address', address);
+  //  console.log('name', name);
+  //  console.log('amount', amount);
+  //  console.log('sCountry', sCountry);
+  //  console.log('dCountry', dCountry);
+  //  console.log('rAccount', fromAccount);
+  //  console.log('sAccount', toAccount);
+  //  console.log('acquiringBin', bin);
+  //  console.log('expiry', expiry);
+  //  console.log('senderCurrencyCode', senderCurrencyCode);
+  //  console.log('transactionCurrencyCode', transactionCurrencyCode);
+  //  console.log('=====================================');
   return (
     <>
       <h2 className="mb-2">Transfer a money using visa from bank to Bank</h2>
@@ -347,7 +349,7 @@ export default function VisaTransfer() {
               {error.senderCurrencyCode}
             </div>
           </div>
-          <div className="form-group mb-2">
+          {/* <div className="form-group mb-2">
             <label for="exampleInputPassword2">
               Transaction Currency Code :
             </label>
@@ -365,7 +367,7 @@ export default function VisaTransfer() {
             <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.transactionCurrencyCode}
             </div>
-          </div>
+          </div> */}
 
           <button
             type="submit"
@@ -391,7 +393,7 @@ export default function VisaTransfer() {
 
 //TEST-DATA
 
-//4957030420210496
+//4957030005123304
 //4761360055652118
 //US
 //IN

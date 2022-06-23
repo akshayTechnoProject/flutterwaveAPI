@@ -219,7 +219,7 @@ async function postPushFundTransferAPI() {
 
 function readPullFundsTransaction() {
   var request = require("request");
-  let statusIdentifier = 123456;
+  let statusIdentifier = 304367906345953;
   var options = {
     hostname: "sandbox.api.visa.com",
     port: 443,
@@ -234,7 +234,7 @@ function readPullFundsTransaction() {
   };
   request(options, function (error, response) {
     if (error) throw new Error(error);
-    console.log(response.body);
+    console.log(response);
   });
 }
 
