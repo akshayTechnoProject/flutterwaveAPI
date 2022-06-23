@@ -258,7 +258,55 @@ function readPushFundsTransaction() {
     console.log(response.body);
   });
 }
+async function validateFundTransferAPI() {
+  var options = {
+    hostname: "sandbox.api.visa.com",
+    port: 443,
+    key: fs.readFileSync(key),
+    cert: fs.readFileSync(cert),
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      // Authorization:
+      //   "Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=",
+    },
+    json: true,
+    method: "POST",
+    url: "https://sandbox.api.visa.com/pav/v1/cardvalidation",
 
+    body: {
+      systemsTraceAuditNumber: "743720",
+      cardCvv2Value: "022",
+      cardAcceptor: {
+        address: {
+          country: "US",
+          zipCode: "94404",
+          city: "fostr city",
+          state: "CA",
+        },
+        idCode: "111111",
+        name: "ABC Corp",
+        terminalId: "12345678",
+      },
+      primaryAccountNumber: "4957030420210462",
+      retrievalReferenceNumber: "015221743720",
+      cardExpiryDate: "2040-10",
+      addressVerificationResults: {
+        street: "801 Metro Center Blv",
+        postalCode: "94404",
+      },
+    },
+  };
+  options.agent = new https.Agent(options);
+  request.post(options, (err, res, body) => {
+    if (err) {
+      return console.log(err);
+    }
+    console.log(`Status: ${res.statusCode}`);
+    console.log(body);
+  });
+}
+validateFundTransferAPI();
 // postPullFundTransferAPI();
 
 // postPushFundTransferAPI();
