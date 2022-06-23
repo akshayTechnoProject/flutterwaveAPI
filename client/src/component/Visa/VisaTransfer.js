@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import country from '../includes/country.json';
-import countryData from '../includes/CountryData.json';
+import country from '../../includes/country.json';
+import countryData from '../../includes/CountryData.json';
+import { useNavigate } from 'react-router-dom';
+
 export default function VisaTransfer() {
+  const navigate = useNavigate();
   const [fromAccount, setFromAccount] = useState('');
   const [toAccount, setToAccount] = useState('');
   const [sCountry, setsCountry] = useState('');
@@ -14,12 +17,9 @@ export default function VisaTransfer() {
   const [senderCurrencyCode, setSenderCurrencyCode] = useState('');
   const [transactionCurrencyCode, setTransactionCurrencyCode] = useState('');
 
-  const [countryList, setCountryList] = useState(country);
   const [countryDataList, setCountryDataList] = useState(countryData);
   const [amount, setAmount] = useState('');
   const [error, setError] = useState({});
-  const [convertMoney, setConvertMoney] = useState();
-  const [rate, setRate] = useState();
   const [disable, setDisable] = useState(false);
   function validate() {
     let error = {};
@@ -143,7 +143,31 @@ export default function VisaTransfer() {
   //  console.log('=====================================');
   return (
     <>
-      <h2 className="mb-2">Transfer a money using visa from bank to Bank</h2>
+      <h2 className="mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          onClick={() => navigate('/')}
+          fill="currentColor"
+          className="bi bi-arrow-left"
+          viewBox="0 0 16 16"
+          style={{
+            cursor: 'pointer',
+            fontSize: '40px',
+            marginTop: '0px',
+            marginBottom: '5px',
+            marginRight: '10px',
+            fontWeight: '1000',
+          }}
+        >
+          <path
+            fill-rule="evenodd"
+            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
+          />
+        </svg>
+        Transfer a money using visa from Bank to Bank
+      </h2>
       <div className="transferForm w-25 p-2 formDiv">
         <form>
           <div className="form-group mb-2">

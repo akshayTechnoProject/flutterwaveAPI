@@ -1,29 +1,31 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function FlutterAccountTransfer() {
+  const navigate = useNavigate();
   const [msg, setMsg] = useState();
-  const [userName, setUserName] = useState("");
-  const [merchantId, setMerchantId] = useState("");
-  const [amount, setAmount] = useState("");
+  const [userName, setUserName] = useState('');
+  const [merchantId, setMerchantId] = useState('');
+  const [amount, setAmount] = useState('');
   const [error, setError] = useState({});
   const [convertMoney, setConvertMoney] = useState();
   const [rate, setRate] = useState();
   const [disable, setDisable] = useState(false);
-  const [sourceCurrency, setSourceCurrency] = useState("NGN");
-  const [destinationCurrency, setDestinationCurrency] = useState("NGN");
+  const [sourceCurrency, setSourceCurrency] = useState('NGN');
+  const [destinationCurrency, setDestinationCurrency] = useState('NGN');
   function validate() {
     let error = {};
     let isValide = true;
-    if (merchantId == "") {
-      error["merchant"] = "please enter a Merchant ID";
+    if (merchantId == '') {
+      error['merchant'] = 'please enter a Merchant ID';
       isValide = false;
     }
-    if (userName == "") {
+    if (userName == '') {
       isValide = false;
     }
     if (amount <= 0) {
-      error["amount"] = "please enter valid amount";
+      error['amount'] = 'please enter valid amount';
       isValide = false;
     }
     setError(error);
@@ -38,48 +40,48 @@ export default function FlutterAccountTransfer() {
 
   function makeTransfer() {
     setDisable(true);
-    const myurl = "http://localhost:3001/api/admin/flutter-transfer";
+    const myurl = 'http://localhost:3001/api/admin/flutter-transfer';
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
-    bodyFormData.append("amount", convertMoney);
-    bodyFormData.append("currancy", sourceCurrency);
-    bodyFormData.append("account", merchantId);
+    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
+    bodyFormData.append('amount', convertMoney);
+    bodyFormData.append('currancy', sourceCurrency);
+    bodyFormData.append('account', merchantId);
     axios({
-      method: "POST",
+      method: 'POST',
       url: myurl,
       data: bodyFormData,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then((response) => {
         if (response.data.success) {
           setDisable(false);
-          alert("payment successfull");
-          setAmount("");
-          setMerchantId("");
-          setUserName("");
+          alert('payment successfull');
+          setAmount('');
+          setMerchantId('');
+          setUserName('');
           setMsg(null);
-          setSourceCurrency("NGN");
-          setDestinationCurrency("NGN");
+          setSourceCurrency('NGN');
+          setDestinationCurrency('NGN');
         }
       })
       .catch((error) => {
-        console.log("Error", error);
+        console.log('Error', error);
       });
   }
   function getAmount(value, sCurrancy, dCurrancy) {
     setDisable(true);
     setAmount(value);
-    const myurl = "http://localhost:3001/api/admin/get-ratedata";
+    const myurl = 'http://localhost:3001/api/admin/get-ratedata';
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
-    bodyFormData.append("amount", value);
-    bodyFormData.append("sCurrancy", sCurrancy);
-    bodyFormData.append("dCurrancy", dCurrancy);
+    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
+    bodyFormData.append('amount', value);
+    bodyFormData.append('sCurrancy', sCurrancy);
+    bodyFormData.append('dCurrancy', dCurrancy);
     axios({
-      method: "POST",
+      method: 'POST',
       url: myurl,
       data: bodyFormData,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then((response) => {
         if (response.data.success) {
@@ -89,23 +91,23 @@ export default function FlutterAccountTransfer() {
         }
       })
       .catch((error) => {
-        console.log("Error", error);
+        console.log('Error', error);
       });
   }
 
   function getName(id) {
     setMsg(null);
     setDisable(true);
-    const myurl = "http://localhost:3001/api/admin/flutter-merchant-id";
+    const myurl = 'http://localhost:3001/api/admin/flutter-merchant-id';
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append("auth_code", "TruliPay#Wallet$&$aPp#MD");
-    bodyFormData.append("account", id);
+    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
+    bodyFormData.append('account', id);
 
     axios({
-      method: "POST",
+      method: 'POST',
       url: myurl,
       data: bodyFormData,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then((response) => {
         if (response.data.success) {
@@ -117,12 +119,36 @@ export default function FlutterAccountTransfer() {
       .catch((error) => {
         setMsg(error.response.data.data.message);
 
-        setUserName("");
+        setUserName('');
       });
   }
   return (
     <>
-      <h2 className="mb-2">Transfer a money from flutterwave to flutterwave</h2>
+      <h2 className="mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          onClick={() => navigate('/flutterwave')}
+          fill="currentColor"
+          className="bi bi-arrow-left"
+          viewBox="0 0 16 16"
+          style={{
+            cursor: 'pointer',
+            fontSize: '40px',
+            marginTop: '0px',
+            marginBottom: '5px',
+            marginRight: '10px',
+            fontWeight: '1000',
+          }}
+        >
+          <path
+            fill-rule="evenodd"
+            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
+          />
+        </svg>
+        Transfer a money from flutterwave to flutterwave
+      </h2>
       <div className="transferForm w-25 p-2 formDiv">
         <form>
           <div className="form-group mb-2">
@@ -138,13 +164,13 @@ export default function FlutterAccountTransfer() {
                 getName(e.target.value);
               }}
             />
-            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.merchant}
             </div>
           </div>
           {merchantId ? (
             userName ? (
-              <div className="rateDiv mt-3" style={{ fontSize: "14px" }}>
+              <div className="rateDiv mt-3" style={{ fontSize: '14px' }}>
                 <label for="exampleInputPassword1">Bussiness name :</label>
 
                 <input
@@ -156,8 +182,8 @@ export default function FlutterAccountTransfer() {
                 />
               </div>
             ) : (
-              <div className="rateDiv mt-3" style={{ fontSize: "14px" }}>
-                {msg ? msg : "fetching a data..."}
+              <div className="rateDiv mt-3" style={{ fontSize: '14px' }}>
+                {msg ? msg : 'fetching a data...'}
               </div>
             )
           ) : null}
@@ -230,16 +256,16 @@ export default function FlutterAccountTransfer() {
                 }}
               />
             </div>
-            <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.amount}
             </div>
           </div>
 
-          {amount != "" ? (
-            <div className="rateDiv mt-3" style={{ fontSize: "14px" }}>
+          {amount != '' ? (
+            <div className="rateDiv mt-3" style={{ fontSize: '14px' }}>
               {convertMoney != null
                 ? `${sourceCurrency} ${convertMoney} = ${destinationCurrency} ${amount} at rate ${rate}`
-                : "fetching a data..."}
+                : 'fetching a data...'}
             </div>
           ) : null}
           <button
@@ -248,7 +274,7 @@ export default function FlutterAccountTransfer() {
             onClick={submitEvent}
             disabled={disable}
           >
-            {disable ? "Loading..." : "Pay now"}
+            {disable ? 'Loading...' : 'Pay now'}
           </button>
         </form>
         <br />
