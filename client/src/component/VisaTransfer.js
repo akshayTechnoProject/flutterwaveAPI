@@ -8,6 +8,8 @@ export default function VisaTransfer() {
   const [dCountry, setdCountry] = useState('');
   const [address, setAddress] = useState('');
   const [name, setName] = useState('');
+  const [expiry, setExpiry] = useState('');
+  const [bin, setBIN] = useState('');
 
   const [countryList, setCountryList] = useState(countryData);
   const [amount, setAmount] = useState('');
@@ -50,6 +52,14 @@ export default function VisaTransfer() {
     }
     if (amount <= 0 || amount == '') {
       error['amount'] = 'please enter valid amount';
+      isValide = false;
+    }
+    if (expiry == '') {
+      error['expiry'] = 'please enter valid date';
+      isValide = false;
+    }
+    if (bin == '') {
+      error['bin'] = 'please enter bank identification number';
       isValide = false;
     }
     setError(error);
@@ -196,6 +206,24 @@ export default function VisaTransfer() {
             </div>
           </div>
           <div className="form-group mb-2">
+            <label for="exampleInputPassword2">
+              Bank Identification Number:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="exampleInputPassword2"
+              placeholder="Enter bank identification number"
+              value={bin}
+              onChange={(e) => {
+                setBIN(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.bin}
+            </div>
+          </div>
+          <div className="form-group mb-2">
             <label for="exampleInputPassword2">Sender name:</label>
             <input
               type="text"
@@ -243,8 +271,24 @@ export default function VisaTransfer() {
               {error.address}
             </div>
           </div>
-          <label for="expiry">Expiry:</label>
-          <input type="month" id="expiry" name="expiry" />
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword2">Card Expiry Date:</label>
+            <input
+              type="month"
+              id="expiry"
+              className="form-control"
+              name="expiry"
+              value={expiry}
+              onChange={(e) => {
+                setExpiry(e.target.value);
+                //console.log(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.expiry}
+            </div>
+          </div>
+
           <button
             type="submit"
             className="btn btn-primary mt-3 w-100"
