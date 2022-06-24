@@ -48,6 +48,11 @@ export default function Flutterwave() {
           Flutterwave to Flutterwave
         </button>
       </Link>
+      <Link to={`/bank-to-flutterwave`} className="link">
+        <button type="submit" className="btn btn-info m-3 w-50">
+          Bank to Flutterwave
+        </button>
+      </Link>
     </div>
   );
 }
