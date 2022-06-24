@@ -276,9 +276,9 @@ async function validateAccount() {
     url: 'https://sandbox.api.visa.com/pav/v1/cardvalidation',
 
     body: {
-      cardCvv2Value: '999',
+      // cardCvv2Value: "999",
       primaryAccountNumber: '4957030420210454',
-      cardExpiryDate: '2040-10',
+      // cardExpiryDate: "2040-10",
       addressVerificationResults: {
         postalCode: '94404',
       },
@@ -295,7 +295,7 @@ async function validateAccount() {
   });
 }
 
-// validateAccount();
+//validateAccount();
 
 // postPullFundTransferAPI();
 

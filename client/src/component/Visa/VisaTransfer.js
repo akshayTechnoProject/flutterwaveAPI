@@ -17,7 +17,6 @@ export default function VisaTransfer() {
   const [senderCurrencyCode, setSenderCurrencyCode] = useState('');
   const [transactionCurrencyCode, setTransactionCurrencyCode] = useState('');
   const [postalCode, setPostalCode] = useState('');
-  const [CVV, setCVV] = useState('');
 
   const [countryDataList, setCountryDataList] = useState(countryData);
   const [amount, setAmount] = useState('');
@@ -52,10 +51,6 @@ export default function VisaTransfer() {
       error['name'] = 'please enter name';
       isValide = false;
     }
-    if (CVV == '') {
-      error['CVV'] = 'please enter valid cvv';
-      isValide = false;
-    }
     if (amount <= 0 || amount == '') {
       error['amount'] = 'please enter valid amount';
       isValide = false;
@@ -84,21 +79,20 @@ export default function VisaTransfer() {
     setError(error);
     return isValide;
   }
-  console.log(postalCode);
-  console.log(CVV);
   const submitEvent = (e) => {
     e.preventDefault();
-    if (validate()) makeTransfer();
+    if (validate()) {
+    }
+    validateCard();
   };
   function validateCard() {
     setDisable(true);
+    console.log('===================');
 
     const myurl = 'http://localhost:3001/api/admin/account-validation';
     var bodyFormData = new URLSearchParams();
     bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
-    bodyFormData.append('cvv', CVV);
-    bodyFormData.append('account', fromAccount);
-    bodyFormData.append('expiry', expiry);
+    bodyFormData.append('account', toAccount);
     bodyFormData.append('postalCode', postalCode);
 
     axios({
@@ -107,21 +101,34 @@ export default function VisaTransfer() {
       data: bodyFormData,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
-      .then((response) => {
-        console.log(response);
+      .then(async (response) => {
+        //console.log(response);
         if (response?.data?.success) {
-          console.log('#', response.data.data);
+          console.log(
+            'Response of Valid account check of receiver:::',
+            response?.data?.data
+          );
+          if (
+            response?.data?.data?.body?.actionCode === '00' ||
+            response?.data?.data?.body?.actionCode === '85'
+          ) {
+            //console.log('hi');
+            await makeTransfer();
+          } else {
+            alert(`Invalid Data`);
+          }
           setDisable(false);
-          alert(`payment successful`);
+        } else {
+          console.log('something wrong...', response);
         }
         setDisable(false);
       })
-
       .catch((error) => {
         console.log(error);
         alert(error?.response?.data?.data?.data?.errorMessage);
         setDisable(false);
       });
+    console.log('===================');
   }
 
   function makeTransfer() {
@@ -149,12 +156,12 @@ export default function VisaTransfer() {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then((response) => {
-        console.log(response);
+        //console.log(response);
         if (response?.data?.success) {
-          console.log('#', response.data.data);
+          console.log('Response of Transaction:::', response?.data);
           setDisable(false);
           alert(
-            `payment successful, Here is your transactionIdentifier code: ${response?.data?.data['push']?.body?.transactionIdentifier} and approvalCode: ${response?.data?.data['push']?.body?.approvalCode}`
+            `payment successful, Here is your transactionIdentifier code: ${response?.data?.data['push']?.body?.transactionIdentifier}.`
           );
         }
         setDisable(false);
@@ -162,28 +169,11 @@ export default function VisaTransfer() {
 
       .catch((error) => {
         console.log(error);
-        // if (
-        //   error.response?.data?.data?.errorMessage?.includes(
-        //     "Invalid PAN or TOKEN."
-        //   )
-        // )
-        //   alert("Invalid PAN or TOKEN.");
         alert(error?.response?.data?.data?.data?.errorMessage);
         setDisable(false);
       });
   }
-  //  console.log('address', address);
-  //  console.log('name', name);
-  //  console.log('amount', amount);
-  //  console.log('sCountry', sCountry);
-  //  console.log('dCountry', dCountry);
-  //  console.log('rAccount', fromAccount);
-  //  console.log('sAccount', toAccount);
-  //  console.log('acquiringBin', bin);
-  //  console.log('expiry', expiry);
-  //  console.log('senderCurrencyCode', senderCurrencyCode);
-  //  console.log('transactionCurrencyCode', transactionCurrencyCode);
-  //  console.log('=====================================');
+
   return (
     <>
       <h2 className="mb-2">
@@ -213,6 +203,7 @@ export default function VisaTransfer() {
       </h2>
       <div className="transferForm w-25 p-2 formDiv">
         <form>
+          {/* sender Account */}
           <div className="form-group mb-2">
             <label for="exampleInputPassword2">From Account :</label>
             <input
@@ -229,22 +220,61 @@ export default function VisaTransfer() {
               {error.fromAccount}
             </div>
           </div>
+          {/* Sender Name */}
           <div className="form-group mb-2">
-            <label for="exampleInputPassword2">To Account :</label>
+            <label for="exampleInputPassword2">Sender Name:</label>
             <input
-              type="number"
+              type="text"
               className="form-control"
               id="exampleInputPassword2"
-              placeholder="Enter Bank Account"
-              value={toAccount}
+              placeholder="Enter name"
+              value={name}
               onChange={(e) => {
-                setToAccount(e.target.value);
+                setName(e.target.value);
               }}
             />
             <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
-              {error.toAccount}
+              {error.name}
             </div>
           </div>
+          {/* Sender Bank Identification Number */}
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword2">
+              Bank Identification Number:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="exampleInputPassword2"
+              placeholder="Enter bank identification number"
+              value={bin}
+              onChange={(e) => {
+                setBIN(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.bin}
+            </div>
+          </div>
+          {/* Card Expiry Date */}
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword2">Card Expiry Date:</label>
+            <input
+              type="month"
+              id="expiry"
+              className="form-control"
+              name="expiry"
+              value={expiry}
+              onChange={(e) => {
+                setExpiry(e.target.value);
+                //console.log(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.expiry}
+            </div>
+          </div>
+          {/* source country */}
           <div className="form-group mb-2">
             <label for="exampleInputPassword2">Source country :</label>
             <select
@@ -280,6 +310,43 @@ export default function VisaTransfer() {
               {error.sCountry}
             </div>
           </div>
+          {/* Sender Currency Code */}
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword2">Sender Currency Code :</label>
+            <input
+              type="text"
+              className="form-control"
+              id="exampleInputPassword2"
+              placeholder="Enter sender currency code"
+              disabled
+              value={senderCurrencyCode}
+              onChange={(e) => {
+                setSenderCurrencyCode(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.senderCurrencyCode}
+            </div>
+          </div>
+
+          {/* receivers account */}
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword2">To Account :</label>
+            <input
+              type="number"
+              className="form-control"
+              id="exampleInputPassword2"
+              placeholder="Enter Bank Account"
+              value={toAccount}
+              onChange={(e) => {
+                setToAccount(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.toAccount}
+            </div>
+          </div>
+          {/* destination country */}
           <div className="form-group mb-2">
             <label for="exampleInputPassword2">Destination Country :</label>
 
@@ -316,58 +383,9 @@ export default function VisaTransfer() {
               {error.dCountry}
             </div>
           </div>
+          {/* Receiver's Postal Code */}
           <div className="form-group mb-2">
-            <label for="exampleInputPassword2">
-              Bank Identification Number:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="exampleInputPassword2"
-              placeholder="Enter bank identification number"
-              value={bin}
-              onChange={(e) => {
-                setBIN(e.target.value);
-              }}
-            />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
-              {error.bin}
-            </div>
-          </div>
-          <div className="form-group mb-2">
-            <label for="exampleInputPassword2">Sender name:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="exampleInputPassword2"
-              placeholder="Enter name"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
-            />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
-              {error.name}
-            </div>
-          </div>
-          <div className="form-group mb-2">
-            <label for="exampleInputPassword2">CVV :</label>
-            <input
-              type="number"
-              className="form-control"
-              id="exampleInputPassword2"
-              placeholder="Enter cvv"
-              value={CVV}
-              onChange={(e) => {
-                setCVV(e.target.value);
-              }}
-            />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
-              {error.CVV}
-            </div>
-          </div>
-          <div className="form-group mb-2">
-            <label for="exampleInputPassword2">Postal Code :</label>
+            <label for="exampleInputPassword2">Receiver's Postal Code:</label>
             <input
               type="number"
               className="form-control"
@@ -382,6 +400,7 @@ export default function VisaTransfer() {
               {error.postalCode}
             </div>
           </div>
+          {/* Amount */}
           <div className="form-group mb-2">
             <label for="exampleInputPassword2">Amount :</label>
             <input
@@ -398,6 +417,7 @@ export default function VisaTransfer() {
               {error.amount}
             </div>
           </div>
+          {/* Address */}
           <div className="form-group mb-2">
             <label for="exampleInputPassword2">Address :</label>
             <input
@@ -414,40 +434,7 @@ export default function VisaTransfer() {
               {error.address}
             </div>
           </div>
-          <div className="form-group mb-2">
-            <label for="exampleInputPassword2">Card Expiry Date:</label>
-            <input
-              type="month"
-              id="expiry"
-              className="form-control"
-              name="expiry"
-              value={expiry}
-              onChange={(e) => {
-                setExpiry(e.target.value);
-                //console.log(e.target.value);
-              }}
-            />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
-              {error.expiry}
-            </div>
-          </div>
-          <div className="form-group mb-2">
-            <label for="exampleInputPassword2">Sender Currency Code :</label>
-            <input
-              type="text"
-              className="form-control"
-              id="exampleInputPassword2"
-              placeholder="Enter sender currency code"
-              disabled
-              value={senderCurrencyCode}
-              onChange={(e) => {
-                setSenderCurrencyCode(e.target.value);
-              }}
-            />
-            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
-              {error.senderCurrencyCode}
-            </div>
-          </div>
+
           {/* <div className="form-group mb-2">
             <label for="exampleInputPassword2">
               Transaction Currency Code :
