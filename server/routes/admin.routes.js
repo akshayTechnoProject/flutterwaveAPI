@@ -18,6 +18,7 @@ module.exports = (app) => {
   router.post("/mobile-transfer", flutterwave.mobileTransfer);
   router.post("/get-banklist", flutterwave.getBankList);
   router.post("/visa-transfer", visa.visaBankTransfer);
+  router.post("/account-validation", visa.accountValidation);
 
   app.use("/api/admin", router);
 };

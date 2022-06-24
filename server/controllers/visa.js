@@ -274,3 +274,81 @@ exports.visaBankTransfer = async (req, res) => {
     });
   }
 };
+
+exports.accountValidation = async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  if (process.env.ADMIN_AUTH_CODE == req.body.auth_code) {
+    var condition = {
+      cvv: req.body.cvv,
+      account: req.body.account,
+      expiry: req.body.expiry,
+      postalCode: req.body.postalCode,
+    };
+    if (req.body.account) {
+      var options = {
+        hostname: "sandbox.api.visa.com",
+        port: 443,
+        key: fs.readFileSync(require("path").resolve(__dirname, key)),
+        cert: fs.readFileSync(require("path").resolve(__dirname, cert)),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization:
+            "Basic REhKSjQ2WFhRS1FUU1kwTjFXWU8yMW5MMmU5US02T2lsdG56dTBQeG9kdHl5TXR3RTo2cHVtQUpOZEJoVHVNek5xVHJJMUs=",
+        },
+        json: true,
+        method: "POST",
+        url: "https://sandbox.api.visa.com/pav/v1/cardvalidation",
+
+        body: {
+          cardCvv2Value: condition.cvv,
+          primaryAccountNumber: condition.account,
+          cardExpiryDate: condition.expiry,
+          addressVerificationResults: {
+            postalCode: condition.postalCode,
+          },
+        },
+      };
+
+      options.agent = new https.Agent(options);
+      request.post(options, (err, resq, bodyq) => {
+        if (err) {
+          res.status(400).send({
+            success: false,
+            data: err,
+          });
+        } else if (resq.statusCode == 200) {
+          res.status(200).send({
+            success: true,
+            data: {
+              statusCode: resq.statusCode,
+              body: resq.body,
+            },
+            message: "Validation successfully",
+          });
+        } else {
+          res.status(400).send({
+            success: false,
+            data: bodyq,
+          });
+        }
+      });
+    } else {
+      res.status(400).send({
+        success: false,
+        // data: JSON.parse(response.body),
+        message: "pass all the necessary data",
+      });
+    }
+  } else {
+    res.status(400).send({
+      success: false,
+      data: [],
+      message: "You are not authorized",
+    });
+  }
+};
