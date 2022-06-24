@@ -123,6 +123,7 @@ export default function VisaTransfer() {
         setDisable(false);
       });
   }
+
   function makeTransfer() {
     setDisable(true);
 
