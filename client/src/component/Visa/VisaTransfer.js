@@ -16,6 +16,8 @@ export default function VisaTransfer() {
   const [bin, setBIN] = useState('');
   const [senderCurrencyCode, setSenderCurrencyCode] = useState('');
   const [transactionCurrencyCode, setTransactionCurrencyCode] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [CVV, setCVV] = useState('');
 
   const [countryDataList, setCountryDataList] = useState(countryData);
   const [amount, setAmount] = useState('');
@@ -44,12 +46,14 @@ export default function VisaTransfer() {
     }
     if (address == '') {
       error['address'] = 'please enter address';
-
       isValide = false;
     }
     if (name == '') {
       error['name'] = 'please enter name';
-
+      isValide = false;
+    }
+    if (CVV == '') {
+      error['CVV'] = 'please enter valid cvv';
       isValide = false;
     }
     if (amount <= 0 || amount == '') {
@@ -58,6 +62,10 @@ export default function VisaTransfer() {
     }
     if (expiry == '') {
       error['expiry'] = 'please enter valid date';
+      isValide = false;
+    }
+    if (postalCode == '') {
+      error['postalCode'] = 'please enter postal code';
       isValide = false;
     }
     if (bin == '') {
@@ -76,11 +84,45 @@ export default function VisaTransfer() {
     setError(error);
     return isValide;
   }
+  console.log(postalCode);
+  console.log(CVV);
   const submitEvent = (e) => {
     e.preventDefault();
     if (validate()) makeTransfer();
   };
+  function validateCard() {
+    setDisable(true);
 
+    const myurl = 'http://localhost:3001/api/admin/account-validation';
+    var bodyFormData = new URLSearchParams();
+    bodyFormData.append('auth_code', 'TruliPay#Wallet$&$aPp#MD');
+    bodyFormData.append('cvv', CVV);
+    bodyFormData.append('account', fromAccount);
+    bodyFormData.append('expiry', expiry);
+    bodyFormData.append('postalCode', postalCode);
+
+    axios({
+      method: 'POST',
+      url: myurl,
+      data: bodyFormData,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    })
+      .then((response) => {
+        console.log(response);
+        if (response?.data?.success) {
+          console.log('#', response.data.data);
+          setDisable(false);
+          alert(`payment successful`);
+        }
+        setDisable(false);
+      })
+
+      .catch((error) => {
+        console.log(error);
+        alert(error?.response?.data?.data?.data?.errorMessage);
+        setDisable(false);
+      });
+  }
   function makeTransfer() {
     setDisable(true);
 
@@ -305,6 +347,38 @@ export default function VisaTransfer() {
             />
             <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
               {error.name}
+            </div>
+          </div>
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword2">CVV :</label>
+            <input
+              type="number"
+              className="form-control"
+              id="exampleInputPassword2"
+              placeholder="Enter cvv"
+              value={CVV}
+              onChange={(e) => {
+                setCVV(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.CVV}
+            </div>
+          </div>
+          <div className="form-group mb-2">
+            <label for="exampleInputPassword2">Postal Code :</label>
+            <input
+              type="number"
+              className="form-control"
+              id="exampleInputPassword2"
+              placeholder="Enter postal code"
+              value={postalCode}
+              onChange={(e) => {
+                setPostalCode(e.target.value);
+              }}
+            />
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              {error.postalCode}
             </div>
           </div>
           <div className="form-group mb-2">
