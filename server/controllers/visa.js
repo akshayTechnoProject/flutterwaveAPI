@@ -283,12 +283,10 @@ exports.accountValidation = async (req, res) => {
   );
   if (process.env.ADMIN_AUTH_CODE == req.body.auth_code) {
     var condition = {
-      cvv: req.body.cvv,
       account: req.body.account,
-      expiry: req.body.expiry,
       postalCode: req.body.postalCode,
     };
-    if (req.body.account) {
+    if (condition.account && condition.postalCode) {
       var options = {
         hostname: "sandbox.api.visa.com",
         port: 443,
@@ -305,9 +303,9 @@ exports.accountValidation = async (req, res) => {
         url: "https://sandbox.api.visa.com/pav/v1/cardvalidation",
 
         body: {
-          cardCvv2Value: condition.cvv,
+          // cardCvv2Value: condition.cvv,
           primaryAccountNumber: condition.account,
-          cardExpiryDate: condition.expiry,
+          // cardExpiryDate: condition.expiry,
           addressVerificationResults: {
             postalCode: condition.postalCode,
           },
