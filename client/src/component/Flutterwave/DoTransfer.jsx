@@ -15,6 +15,7 @@ export default function DoTransfer() {
   const [disable, setDisable] = useState(false);
   const [sourceCurrency, setSourceCurrency] = useState('NGN');
   const [destinationCurrency, setDestinationCurrency] = useState('NGN');
+  console.log(process.env.REACT_APP_API_PUBLIC_KEY);
   const config = {
     public_key: process.env.REACT_APP_API_PUBLIC_KEY,
     tx_ref: Date.now(),
